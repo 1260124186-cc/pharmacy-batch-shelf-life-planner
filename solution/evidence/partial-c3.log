@@ -1,0 +1,246 @@
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-nfwz2k49/partial-c3/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-nfwz2k49/partial-c3/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
+Exit: 0
+Reward: 0.2
+stdout:
+Collecting pytest==8.4.1 (from -r /tests/requirements.txt (line 1))
+  Downloading pytest-8.4.1-py3-none-any.whl (365 kB)
+Collecting iniconfig==2.3.1 (from -r /tests/requirements.txt (line 2))
+  Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Collecting packaging==26.3 (from -r /tests/requirements.txt (line 3))
+  Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Collecting pluggy==1.7.0 (from -r /tests/requirements.txt (line 4))
+  Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Collecting pygments==2.21.0 (from -r /tests/requirements.txt (line 5))
+  Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 332.9 kB/s eta 0:00:00
+Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.1
+
+stderr:
+  WARNING: The script pygmentize is installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts py.test and pytest are installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+[c1]
+FFFF.                                                                    [100%]
+=================================== FAILURES ===================================
+__________________________ test_c1_single_shift_batch __________________________
+
+    def test_c1_single_shift_batch():
+        """Cover a small single-shift demand with one fixed batch."""
+        instance = make_instance([5], [1], batch_size=5, shelf_life=1, run_cost=100, waste_cost=7)
+        expected = reference_plan(instance, [1])
+>       assert output("run", instance) == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 5, 'production_shift': 0, 'use_shift': 0}], 'instance_id': 'test-pharmacy', 'production': [{'produced_doses': 5, 'production_shift': 0, 'runs': 1, 'used_doses': 5, ...}], 'run_counts': [1], ...}
+E        +  where None = output('run', {'batch_size': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 100, 'shelf_life_shifts': 1, ...})
+
+/tests/test_outputs.py:216: AssertionError
+_______________________ test_c1_shelf_life_and_capacity ________________________
+
+    def test_c1_shelf_life_and_capacity():
+        """Find a feasible optimum when the shelf window is narrower than the horizon."""
+        instance = make_instance(
+            [0, 7, 0, 6, 0],
+            [1, 1, 1, 1, 1],
+            batch_size=4,
+            shelf_life=2,
+            run_cost=10,
+            waste_cost=3,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 4, 'production_shift': 0, 'use_shift': 1}, {'doses': 3, 'production_shift': 1, 'use_shift':....}, {'produced_doses': 0, 'production_shift': 4, 'runs': 0, 'used_doses': 0, ...}], 'run_counts': [1, 1, 1, 1, 0], ...}
+
+/tests/test_outputs.py:231: AssertionError
+________________________ test_c1_prepare_early_vs_late _________________________
+
+    def test_c1_prepare_early_vs_late():
+        """Prefer an early batch when a later batch would leave the first demand short."""
+        instance = make_instance(
+            [1, 0, 4],
+            [1, 1, 1],
+            batch_size=5,
+            shelf_life=3,
+            run_cost=10,
+            waste_cost=100,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 1, 'production_shift': 0, 'use_shift': 0}, {'doses': 4, 'production_shift': 0, 'use_shift':... 0, ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'used_doses': 0, ...}], 'run_counts': [1, 0, 0], ...}
+
+/tests/test_outputs.py:246: AssertionError
+__________________________ test_c1_lexicographic_tie ___________________________
+
+    def test_c1_lexicographic_tie():
+        """Choose the lexicographically smaller run vector when costs tie."""
+        instance = make_instance(
+            [5, 0, 5],
+            [1, 1, 1],
+            batch_size=5,
+            shelf_life=2,
+            run_cost=0,
+            waste_cost=0,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 5, 'production_shift': 0, 'use_shift': 0}, {'doses': 5, 'production_shift': 2, 'use_shift':... 0, ...}, {'produced_doses': 5, 'production_shift': 2, 'runs': 1, 'used_doses': 5, ...}], 'run_counts': [1, 0, 1], ...}
+
+/tests/test_outputs.py:261: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-_xc5j8ay'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-snk4nv3f'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c1_single_shift_batch - AssertionError:...
+FAILED ../tests/test_outputs.py::test_c1_shelf_life_and_capacity - AssertionE...
+FAILED ../tests/test_outputs.py::test_c1_prepare_early_vs_late - AssertionErr...
+FAILED ../tests/test_outputs.py::test_c1_lexicographic_tie - AssertionError: ...
+4 failed, 1 passed, 11 deselected, 2 warnings in 0.41s
+
+[c2]
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___________________________ test_c2_fifo_allocations ___________________________
+
+    def test_c2_fifo_allocations():
+        """Use the oldest still-valid batch before a batch prepared later."""
+        instance = make_instance(
+            [4, 0, 4],
+            [1, 1, 1],
+            batch_size=5,
+            shelf_life=3,
+            run_cost=100,
+            waste_cost=1,
+        )
+        actual = output("run", instance)
+>       assert actual is not None
+E       assert None is not None
+
+/tests/test_outputs.py:310: AssertionError
+________________________ test_c2_expired_doses_counted _________________________
+
+    def test_c2_expired_doses_counted():
+        """Charge unused doses to the expiry shift instead of carrying them forever."""
+        instance = make_instance(
+            [1, 0, 0, 4],
+            [1, 1, 1, 1],
+            batch_size=5,
+            shelf_life=2,
+            run_cost=10,
+            waste_cost=1,
+        )
+        actual = output("run", instance)
+>       assert actual is not None
+E       assert None is not None
+
+/tests/test_outputs.py:334: AssertionError
+________________________ test_c2_zero_demand_tail_waste ________________________
+
+    def test_c2_zero_demand_tail_waste():
+        """Leave a short-lived batch's final doses in the waste account."""
+        instance = make_instance(
+            [1, 0, 0],
+            [1, 1, 1],
+            batch_size=5,
+            shelf_life=2,
+            run_cost=10,
+            waste_cost=1,
+        )
+        actual = output("run", instance)
+>       assert actual is not None
+E       assert None is not None
+
+/tests/test_outputs.py:350: AssertionError
+______________________ test_c2_plan_accounting_consistent ______________________
+
+    def test_c2_plan_accounting_consistent():
+        """Keep produced, used, wasted, allocation, and total fields conserved."""
+        instance = make_instance(
+            [3, 2, 0, 4],
+            [1, 2, 1, 1],
+            batch_size=5,
+            shelf_life=3,
+            run_cost=17,
+            waste_cost=2,
+        )
+        actual = output("run", instance)
+>       assert actual is not None
+E       assert None is not None
+
+/tests/test_outputs.py:367: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-9palrsdr'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-3a4odnvj'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c2_fifo_allocations - assert None is no...
+FAILED ../tests/test_outputs.py::test_c2_expired_doses_counted - assert None ...
+FAILED ../tests/test_outputs.py::test_c2_zero_demand_tail_waste - assert None...
+FAILED ../tests/test_outputs.py::test_c2_plan_accounting_consistent - assert ...
+4 failed, 12 deselected, 2 warnings in 0.34s
+
+[c3]
+.....                                                                    [100%]
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-e1sbtb2z'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+5 passed, 11 deselected, 1 warning in 0.40s
+
+[e2e]
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________________________ test_e2e_example_instance ___________________________
+
+    def test_e2e_example_instance():
+        """Match the bundled example against an independent enumeration."""
+        instance = json.loads((WORKSPACE / "example.json").read_text(encoding="utf-8"))
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 4, 'production_shift': 0, 'use_shift': 0}, {'doses': 1, 'production_shift': 0, 'use_shift':...d_doses': 5, 'production_shift': 5, 'runs': 1, 'used_doses': 5, ...}, ...], 'run_counts': [1, 1, 1, 0, 0, 1, ...], ...}
+
+/tests/test_outputs.py:485: AssertionError
+____________________ test_e2e_generated_ten_shift_instance _____________________
+
+    def test_e2e_generated_ten_shift_instance():
+        """Handle a longer generated horizon without losing FIFO accounting."""
+        instance = generated_instance(20261023, 10)
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert None == {'allocations': [{'doses': 3, 'production_shift': 0, 'use_shift': 0}, {'doses': 2, 'production_shift': 0, 'use_shift':...d_doses': 5, 'production_shift': 5, 'runs': 1, 'used_doses': 5, ...}, ...], 'run_counts': [1, 1, 1, 1, 1, 1, ...], ...}
+
+/tests/test_outputs.py:493: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-e64gn4go'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-d6jsukwr'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_e2e_example_instance - AssertionError: ...
+FAILED ../tests/test_outputs.py::test_e2e_generated_ten_shift_instance - Asse...
+2 failed, 14 deselected, 2 warnings in 0.19s

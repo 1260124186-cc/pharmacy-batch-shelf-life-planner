@@ -1,0 +1,18 @@
+{
+  "instance_id": "pharmacy-lot-demo-20261022",
+  "batch_size": 5,
+  "shelf_life_shifts": 3,
+  "run_cost_cents": 4600,
+  "waste_cost_cents": 95,
+  "shifts": [
+    {"index": 0, "demand": 4, "capacity": 1},
+    {"index": 1, "demand": 4, "capacity": 2},
+    {"index": 2, "demand": 3, "capacity": 1},
+    {"index": 3, "demand": 0, "capacity": 2},
+    {"index": 4, "demand": 3, "capacity": 1},
+    {"index": 5, "demand": 4, "capacity": 2},
+    {"index": 6, "demand": 2, "capacity": 1},
+    {"index": 7, "demand": 0, "capacity": 2},
+    {"index": 8, "demand": 9, "capacity": 1}
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "baseline": {
+    "reward": 0.0,
+    "evidence": "solution/evidence/baseline.log"
+  },
+  "oracle": {
+    "reward": 1.0,
+    "evidence": "solution/evidence/oracle.log"
+  },
+  "partials": [
+    {
+      "challenge_id": "C1",
+      "reward": 0.8,
+      "evidence": "solution/evidence/partial-c1.log"
+    },
+    {
+      "challenge_id": "C2",
+      "reward": 0.6,
+      "evidence": "solution/evidence/partial-c2.log"
+    },
+    {
+      "challenge_id": "C3",
+      "reward": 0.2,
+      "evidence": "solution/evidence/partial-c3.log"
+    }
+  ],
+  "bypasses": [
+    {
+      "id": "B1",
+      "description": "各命令返回空对象",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-empty.log"
+    },
+    {
+      "id": "B2",
+      "description": "固定返回全零计划",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-zero.log"
+    },
+    {
+      "id": "B3",
+      "description": "删除审计模块",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-delete.log"
+    }
+  ]
+}
