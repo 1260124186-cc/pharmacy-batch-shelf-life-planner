@@ -1,84 +1,84 @@
 {
   "name": "pharmacy-batch-shelf-life-planner",
   "category": "H.1 数学问题 (Mathematics)",
-  "scene": "住院药房高警示注射液的跨班次批量配制：固定批量、班次产能、短保质期和报废成本共同约束供给",
-  "core_task": "根据各班次需求求全局最低成本的整数配制次数，按先到期先用展开逐批分配与报废，并提供可重算最优成本的方案审计入口",
+  "scene": "住院药房高警示注射液的跨班次双品种配制：A/B 共用班次产能、各自短保质期，同班切换品种产生一次换线成本",
+  "core_task": "求 A/B 联合整数配制次数的最低成本方案，按品种维护先到期先用库存与报废，并审计方案是否达到联合最优且成本守恒",
   "data_provenance": {
     "kind": "generated",
-    "source": "演示需求、班次容量和成本参数由固定种子 20261022 的离散规则生成；规则先抽取班次基准需求，再按班次编号叠加可复现的整数修正并截断为非负值，仅用于演示重算，不冒充医院实际记录",
-    "seed": 20261022
+    "source": "演示数据由固定种子 20261023 生成：班次 0 固定为 A/B 各 4 支以触发同班换线，班次 1..6 的 A 需求抽自 0..4，B 需求由 0..4 抽样加班次奇偶修正后生成；容量序列固定为 2,2,2,1,2,2,2。仅用于可复现重算，不冒充医院实际记录",
+    "seed": 20261023
   },
-  "answer_verification": "独立枚举每个班次 0 到 capacity 的全部整数配制次数组合，对每个组合按生产班次和失效班次建立药液年龄桶，执行先到期先用并逐次累计未覆盖需求、报废量和成本；取最小成本，成本相同时取次数向量字典序，再与动态规划结果交叉核对",
+  "answer_verification": "独立枚举每个班次所有满足 A+B<=capacity 的非负整数配对数，对每个方案分别维护 A、B 的失效班次桶并按先到期先用消耗需求；逐班累计报废，再加换线成本，最后按成本与 (A次数,B次数) 序列字典序比较，和动态规划结果交叉核对",
   "environment": {
     "base_image": "python:3.12.8-slim-bookworm@sha256:2199a62885a12290dc9c5be3ca0681d367576ab7bf037da120e564723292a2f0",
     "dependencies_locked": true,
     "allow_internet": true,
-    "network_reason": "题目程序本身只使用 Python 标准库并读取随镜像提供的本地 JSON；求解阶段需要连接所选模型的接口，验证阶段还要按哈希安装 pytest 等测试依赖",
+    "network_reason": "题目程序只使用 Python 标准库并读取随镜像提供的本地 JSON；求解阶段需要连接所选模型接口，验证阶段还要按哈希安装 pytest 等测试依赖",
     "architectures": ["amd64", "arm64"]
   },
   "requirements": [
     {
       "id": "R1",
-      "statement": "在班次产能、固定批量和保质期约束下求出满足全部需求的全局最低成本配制次数，并在成本并列时选择次数向量字典序最小者",
-      "observable": "plan 与 run 输出的 run_counts 长度等于班次数，各项不超过该班容量，按规则覆盖需求且总成本等于独立枚举得到的最小值",
-      "expected_basis": "成本为 run_cost_cents 乘配制次数加 waste_cost_cents 乘报废支数；任一需求班次可由不超过 shelf_life_shifts 个前序班次的批次覆盖",
+      "statement": "在 A/B 共用班次产能、固定批量和保质期约束下求联合最低成本配制次数，并在成本并列时按逐班 (A,B) 次数序列取字典序最小者",
+      "observable": "plan 与 run 输出的 run_counts 覆盖全部班次，每班 A+B 不超过容量，各品种需求可覆盖，总成本等于独立枚举最小值",
+      "expected_basis": "成本为配制次数乘 run_cost 加报废支数乘 waste_cost 加发生换线的班次数乘 changeover_cost；两类药液的库存不能混用",
       "test_ids": ["T1", "T2", "T3", "T4", "T5", "T15", "T16"]
     },
     {
       "id": "R2",
-      "statement": "把最优次数展开为先到期先用的逐批分配，准确计算每批已用和报废支数、方案总成本和所有输出字段",
-      "observable": "allocations 只连接仍有保质期的生产班次与使用班次，逐班次需求被精确覆盖，报废在失效班次发生，生产汇总和总成本与分配记录一致",
-      "expected_basis": "同班次可用的药液优先消耗最早失效的批次；每支药液只计一次使用或一次报废，总成本严格由配制次数与报废量相加",
-      "test_ids": ["T6", "T7", "T8", "T9", "T15", "T16"]
+      "statement": "按品种和失效时间展开先到期先用分配，逐批计算使用与报废，并在同一班次同时生产 A/B 时只计一次换线",
+      "observable": "allocations 只连接同品种且在保质期内的生产与使用班次，production 的产量等于使用加报废，total_changeovers 和总成本可由明细复算",
+      "expected_basis": "A、B 各自维护年龄桶；同品种优先用最早失效批次；换线次数按班次统计而不再按运行次数或支数统计",
+      "test_ids": ["T3", "T6", "T7", "T8", "T9", "T15", "T16"]
     },
     {
       "id": "R3",
-      "statement": "审计提供的方案是否结构完整、算术一致且达到最低成本；错误输入或错误方案不得写出半成品，也不得覆盖已有输出",
-      "observable": "audit 对最优方案输出 valid=true，对篡改、遗漏、非最优或字段矛盾的方案输出 valid=false，读入无效时命令非零退出且输出文件保持原样",
-      "expected_basis": "审计只依据实例独立重算最优成本，并逐项核对次数、分配、生产汇总、报废量和总成本，不信任方案中自报的摘要",
+      "statement": "审计方案是否结构完整、算术守恒并达到联合最优；错误实例或不可解析输入不得写出半成品或覆盖已有输出",
+      "observable": "audit 对真正最优方案输出 valid=true，对篡改、遗漏、非最优或字段矛盾方案输出 valid=false，无效实例命令非零退出且输出保持不变",
+      "expected_basis": "审计从实例独立求最优，并逐项重放 A/B 分配、生产汇总、报废、换线和成本，不采信方案自报合计",
       "test_ids": ["T10", "T11", "T12", "T13", "T14"]
     }
   ],
   "tests": [
-    {"id": "T1", "kind": "normal", "requirement_ids": ["R1"], "expected": "单班次需求由一次固定批量配制覆盖"},
-    {"id": "T2", "kind": "normal", "requirement_ids": ["R1"], "expected": "容量与保质期共同约束下选择可行情景的最低成本次数"},
-    {"id": "T3", "kind": "normal", "requirement_ids": ["R1"], "expected": "比较提前配制和临近需求再配制，正确处理报废成本"},
-    {"id": "T4", "kind": "boundary", "requirement_ids": ["R1"], "expected": "多个次数向量同成本时选择字典序最小者"},
-    {"id": "T5", "kind": "exception", "requirement_ids": ["R1"], "expected": "任何保质期内产能组合都无法覆盖需求时非零退出且不写输出"},
-    {"id": "T6", "kind": "normal", "requirement_ids": ["R2"], "expected": "先到期先用导致较早批次耗尽、较晚批次保留"},
-    {"id": "T7", "kind": "normal", "requirement_ids": ["R2"], "expected": "逐批分配只使用保质期内班次并按生产班次和使用班次排序"},
-    {"id": "T8", "kind": "boundary", "requirement_ids": ["R2"], "expected": "最后批次在计划期末未用完时计入报废并进入总成本"},
-    {"id": "T9", "kind": "normal", "requirement_ids": ["R2"], "expected": "生产汇总的产量、用量、报废量和总成本与分配明细守恒"},
-    {"id": "T10", "kind": "normal", "requirement_ids": ["R3"], "expected": "结构完整且真正最优的方案审计为有效"},
-    {"id": "T11", "kind": "exception", "requirement_ids": ["R3"], "expected": "篡改分配或总成本时审计判为无效"},
-    {"id": "T12", "kind": "exception", "requirement_ids": ["R3"], "expected": "缺少关键字段或出现重复生产汇总时审计判为无效"},
-    {"id": "T13", "kind": "exception", "requirement_ids": ["R3"], "expected": "无效输入不覆盖已有输出文件"},
-    {"id": "T14", "kind": "boundary", "requirement_ids": ["R3"], "expected": "可行但非最低成本的次数向量被审计拒绝"},
-    {"id": "T15", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "随题演示实例的全部方案字段与独立复算一致"},
-    {"id": "T16", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "另一组多班次实例在单次命令时限内得到最优次数和完整分配"}
+    {"id": "T1", "kind": "normal", "requirement_ids": ["R1"], "expected": "单班次同时需要 A/B 时各配一次并支付一次换线"},
+    {"id": "T2", "kind": "normal", "requirement_ids": ["R1"], "expected": "共享容量与两班保质期下找到联合可行最优"},
+    {"id": "T3", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "换线成本改变集中在同班或拆到不同班次的选择"},
+    {"id": "T4", "kind": "boundary", "requirement_ids": ["R1"], "expected": "成本并列时按逐班 A/B 二元组字典序取最小"},
+    {"id": "T5", "kind": "exception", "requirement_ids": ["R1"], "expected": "共享保质期产能不足时非零退出且不写输出"},
+    {"id": "T6", "kind": "normal", "requirement_ids": ["R2"], "expected": "A/B 库存隔离且各自先到期先用"},
+    {"id": "T7", "kind": "normal", "requirement_ids": ["R2"], "expected": "同班双品种只计一次换线并进入总成本"},
+    {"id": "T8", "kind": "boundary", "requirement_ids": ["R2"], "expected": "两种药液分别记录期末报废量"},
+    {"id": "T9", "kind": "normal", "requirement_ids": ["R2"], "expected": "生产、使用、报废、分配和总成本逐品种守恒"},
+    {"id": "T10", "kind": "normal", "requirement_ids": ["R3"], "expected": "结构完整且真正最优的双品种方案审计通过"},
+    {"id": "T11", "kind": "exception", "requirement_ids": ["R3"], "expected": "篡改总成本时审计判为无效"},
+    {"id": "T12", "kind": "exception", "requirement_ids": ["R3"], "expected": "缺少某品种生产汇总时审计判为无效"},
+    {"id": "T13", "kind": "boundary", "requirement_ids": ["R3"], "expected": "可行但并非联合最优的方案被审计拒绝"},
+    {"id": "T14", "kind": "exception", "requirement_ids": ["R3"], "expected": "无效需求对象不覆盖已有输出"},
+    {"id": "T15", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "随题双品种演示实例全部字段与独立枚举一致"},
+    {"id": "T16", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "另一组七班次混合容量实例得到联合最优和完整分配"}
   ],
   "challenges": [
     {
       "id": "C1",
-      "description": "带班次容量、固定批量和有限保质期的全局整数配制优化",
-      "failure_mode": "逐班次只看当天缺口或总按最近班次补货，会漏掉提前配制才能覆盖的未来需求，也会错过更便宜的集中配制",
-      "fix_action": "把各班次剩余药液按失效时间编码为状态，逐班次枚举允许的配制次数，保留同状态下更低成本及同成本字典序更小的次数前缀",
+      "description": "A/B 共用班次容量的联合整数优化与逐班二元组并列规则",
+      "failure_mode": "分别给 A、B 做单品种优化会把两个班次容量相加，产生超过共享上限的联合方案；只比较总次数也无法正确处理同成本并列",
+      "fix_action": "在每个班次枚举全部 (A次数,B次数) 且限制其和不超过 capacity，把 A/B 各自年龄桶一起作为动态规划状态，并用二元组路径比较",
       "requirement_ids": ["R1"],
       "test_ids": ["T1", "T2", "T3", "T4", "T5"]
     },
     {
       "id": "C2",
-      "description": "先到期先用的批次展开、报废时点和成本守恒",
-      "failure_mode": "按输入顺序或后进先用消耗批次，会把旧批次留到失效，造成分配明细、报废量与总成本互相矛盾",
-      "fix_action": "按生产班次年龄桶逐支分配，当前班次先消耗最早失效批次，班次结束时淘汰失效桶并把淘汰量计入报废成本",
+      "description": "双品种独立 FIFO 库存与班次级一次换线成本",
+      "failure_mode": "把 A、B 合并库存会跨品种用药；按生产批次数或运行次数重复收换线费，会使报废和总成本错误",
+      "fix_action": "为 A、B 分别维护失效桶和分配明细，按品种执行先到期先用；换线只在某班次的 A、B 次数都为正时累计一次",
       "requirement_ids": ["R2"],
-      "test_ids": ["T6", "T7", "T8", "T9"]
+      "test_ids": ["T3", "T6", "T7", "T8", "T9"]
     },
     {
       "id": "C3",
-      "description": "不信任方案自报字段的审计与输出原子性",
-      "failure_mode": "只检查方案内部总和或直接采信 total_cost_cents，会放过篡改、缺少汇总和非最优方案；异常时还可能留下半写文件",
-      "fix_action": "重新校验实例和方案结构，从实例求独立最小成本，再逐项重放分配并核对所有守恒关系，最后通过临时文件原子替换输出",
+      "description": "从实例独立重算双品种联合最优并检查方案结构",
+      "failure_mode": "只比较方案内的产量总和或直接采信 total_cost，会放过跨品种串库存、漏计换线和非最优次数",
+      "fix_action": "重算联合最低成本与规范 A/B 方案，逐项核对全部生产、分配、报废和换线字段，再通过临时文件原子替换输出",
       "requirement_ids": ["R3"],
       "test_ids": ["T10", "T11", "T12", "T13", "T14"]
     }

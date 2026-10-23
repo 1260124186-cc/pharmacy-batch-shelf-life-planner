@@ -1,18 +1,17 @@
 {
-  "instance_id": "pharmacy-lot-demo-20261022",
-  "batch_size": 5,
+  "instance_id": "pharmacy-two-product-demo-20261023",
+  "batch_size": 4,
   "shelf_life_shifts": 3,
-  "run_cost_cents": 4600,
-  "waste_cost_cents": 95,
+  "run_cost_cents": 3800,
+  "waste_cost_cents": 70,
+  "changeover_cost_cents": 900,
   "shifts": [
-    {"index": 0, "demand": 4, "capacity": 1},
-    {"index": 1, "demand": 4, "capacity": 2},
-    {"index": 2, "demand": 3, "capacity": 1},
-    {"index": 3, "demand": 0, "capacity": 2},
-    {"index": 4, "demand": 3, "capacity": 1},
-    {"index": 5, "demand": 4, "capacity": 2},
-    {"index": 6, "demand": 2, "capacity": 1},
-    {"index": 7, "demand": 0, "capacity": 2},
-    {"index": 8, "demand": 9, "capacity": 1}
+    {"index": 0, "demand": {"A": 4, "B": 4}, "capacity": 2},
+    {"index": 1, "demand": {"A": 2, "B": 3}, "capacity": 2},
+    {"index": 2, "demand": {"A": 1, "B": 4}, "capacity": 2},
+    {"index": 3, "demand": {"A": 2, "B": 2}, "capacity": 1},
+    {"index": 4, "demand": {"A": 4, "B": 2}, "capacity": 2},
+    {"index": 5, "demand": {"A": 0, "B": 4}, "capacity": 2},
+    {"index": 6, "demand": {"A": 0, "B": 3}, "capacity": 2}
   ]
 }

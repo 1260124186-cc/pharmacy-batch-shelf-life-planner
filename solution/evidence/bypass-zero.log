@@ -1,18 +1,13 @@
-Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-nfwz2k49/bypass-zero/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-nfwz2k49/bypass-zero/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-r2ct4ewg/bypass-zero/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-r2ct4ewg/bypass-zero/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
 Exit: 0
 Reward: 0.0
 stdout:
-Collecting pytest==8.4.1 (from -r /tests/requirements.txt (line 1))
-  Downloading pytest-8.4.1-py3-none-any.whl (365 kB)
-Collecting iniconfig==2.3.1 (from -r /tests/requirements.txt (line 2))
-  Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
-Collecting packaging==26.3 (from -r /tests/requirements.txt (line 3))
-  Downloading packaging-26.3-py3-none-any.whl (129 kB)
-Collecting pluggy==1.7.0 (from -r /tests/requirements.txt (line 4))
-  Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
-Collecting pygments==2.21.0 (from -r /tests/requirements.txt (line 5))
-  Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 377.5 kB/s eta 0:00:00
+Looking in links: /tests/wheels
+Processing /tests/wheels/pytest-8.4.1-py3-none-any.whl (from -r /tests/requirements.txt (line 1))
+Processing /tests/wheels/iniconfig-2.3.1-py3-none-any.whl (from -r /tests/requirements.txt (line 2))
+Processing /tests/wheels/packaging-26.3-py3-none-any.whl (from -r /tests/requirements.txt (line 3))
+Processing /tests/wheels/pluggy-1.7.0-py3-none-any.whl (from -r /tests/requirements.txt (line 4))
+Processing /tests/wheels/pygments-2.21.0-py3-none-any.whl (from -r /tests/requirements.txt (line 5))
 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
 Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.1
 
@@ -25,117 +20,127 @@ stderr:
 [c1]
 FFFFF                                                                    [100%]
 =================================== FAILURES ===================================
-__________________________ test_c1_single_shift_batch __________________________
+______________________ test_c1_single_shift_two_products _______________________
 
-    def test_c1_single_shift_batch():
-        """Cover a small single-shift demand with one fixed batch."""
-        instance = make_instance([5], [1], batch_size=5, shelf_life=1, run_cost=100, waste_cost=7)
-        expected = reference_plan(instance, [1])
->       assert output("run", instance) == expected
-E       AssertionError: assert {'allocations...ts': [0], ...} == {'allocations...ts': [1], ...}
-E         
-E         Omitting 2 identical items, use -vv to show
-E         Differing items:
-E         {'allocations': []} != {'allocations': [{'doses': 5, 'production_shift': 0, 'use_shift': 0}]}
-E         {'run_counts': [0]} != {'run_counts': [1]}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 100}
-E         {'total_produced_doses': 0} != {'total_produced_doses': 5}...
-E         
-E         ...Full output truncated (3 lines hidden), use '-vv' to show
-
-/tests/test_outputs.py:216: AssertionError
-_______________________ test_c1_shelf_life_and_capacity ________________________
-
-    def test_c1_shelf_life_and_capacity():
-        """Find a feasible optimum when the shelf window is narrower than the horizon."""
+    def test_c1_single_shift_two_products():
+        """Produce one run of each product when both are needed immediately."""
         instance = make_instance(
-            [0, 7, 0, 6, 0],
-            [1, 1, 1, 1, 1],
+            [(4, 3)],
+            [2],
             batch_size=4,
-            shelf_life=2,
-            run_cost=10,
-            waste_cost=3,
+            shelf_life=1,
+            run_cost=100,
+            waste_cost=7,
+            changeover_cost=50,
         )
         expected = brute_force_plan(instance)
-        actual = output("run", instance)
->       assert actual == expected
-E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations...1, 1, 0], ...}
+>       assert output("run", instance) == expected
+E       AssertionError: assert {'allocations...ts': [0], ...} == {'allocations...ft': 0}], ...}
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'use_shift': 1}, {'doses': 3, 'production_shift': 1, 'use_shift': 1}, {'doses': 4, 'production_shift': 2, 'use_shift': 3}, {'doses': 2, 'production_shift': 3, 'use_shift': 3}]}
-E         {'total_wasted_doses': 0} != {'total_wasted_doses': 3}
-E         {'run_counts': [0, 0, 0, 0, 0]} != {'run_counts': [1, 1, 1, 1, 0]}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 49}...
+E         {'total_produced_doses': 0} != {'total_produced_doses': 8}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 257}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'B', ...}]}
+E         {'run_counts': [0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}]}...
 E         
-E         ...Full output truncated (4 lines hidden), use '-vv' to show
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:231: AssertionError
-________________________ test_c1_prepare_early_vs_late _________________________
+/tests/test_outputs.py:291: AssertionError
+______________________ test_c1_shared_capacity_and_shelf _______________________
 
-    def test_c1_prepare_early_vs_late():
-        """Prefer an early batch when a later batch would leave the first demand short."""
+    def test_c1_shared_capacity_and_shelf():
+        """Respect a capacity shared by both products across the shelf window."""
         instance = make_instance(
-            [1, 0, 4],
-            [1, 1, 1],
-            batch_size=5,
-            shelf_life=3,
+            [(0, 4), (5, 0), (0, 5), (4, 4)],
+            [2, 1, 2, 2],
+            batch_size=4,
+            shelf_life=2,
+            run_cost=11,
+            waste_cost=3,
+            changeover_cost=7,
+        )
+>       assert output("run", instance) == brute_force_plan(instance)
+E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations...ft': 3}], ...}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'total_produced_doses': 0} != {'total_produced_doses': 28}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 109}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 8, 'production_shift': 2, 'runs': 2, 'sku': 'B', ...}, ...]}
+E         {'run_counts': [0, 0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 1, 'B': 0, 'shift': 1}, {'A': 0, 'B': 2, 'shift': 2}, {'A': 1, 'B': 1, 'shift': 3}]}...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:305: AssertionError
+_________________________ test_c1_changeover_tradeoff __________________________
+
+    def test_c1_changeover_tradeoff():
+        """Pay one changeover only when that shift prepares both products."""
+        instance = make_instance(
+            [(2, 2), (0, 0), (2, 2)],
+            [2, 2, 2],
+            batch_size=4,
+            shelf_life=2,
             run_cost=10,
-            waste_cost=100,
+            waste_cost=2,
+            changeover_cost=100,
         )
         expected = brute_force_plan(instance)
         actual = output("run", instance)
 >       assert actual == expected
-E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations...1, 0, 0], ...}
+E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations...ft': 2}], ...}
 E         
-E         Omitting 2 identical items, use -vv to show
+E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'allocations': []} != {'allocations': [{'doses': 1, 'production_shift': 0, 'use_shift': 0}, {'doses': 4, 'production_shift': 0, 'use_shift': 2}]}
-E         {'run_counts': [0, 0, 0]} != {'run_counts': [1, 0, 0]}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 10}
-E         {'total_produced_doses': 0} != {'total_produced_doses': 5}...
+E         {'total_produced_doses': 0} != {'total_produced_doses': 16}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 156}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...tion_shift': 2, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}]}
+E         {'run_counts': [0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}, {'A': 1, 'B': 0, 'shift': 2}]}...
 E         
-E         ...Full output truncated (3 lines hidden), use '-vv' to show
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:246: AssertionError
-__________________________ test_c1_lexicographic_tie ___________________________
+/tests/test_outputs.py:321: AssertionError
+________________________ test_c1_lexicographic_pair_tie ________________________
 
-    def test_c1_lexicographic_tie():
-        """Choose the lexicographically smaller run vector when costs tie."""
+    def test_c1_lexicographic_pair_tie():
+        """Break equal cost by per-shift A then B counts."""
         instance = make_instance(
-            [5, 0, 5],
-            [1, 1, 1],
-            batch_size=5,
-            shelf_life=2,
+            [(4, 0), (0, 4)],
+            [2, 2],
+            batch_size=4,
+            shelf_life=4,
             run_cost=0,
             waste_cost=0,
+            changeover_cost=0,
         )
         expected = brute_force_plan(instance)
         actual = output("run", instance)
 >       assert actual == expected
-E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations...1, 0, 1], ...}
+E       AssertionError: assert {'allocations...: [0, 0], ...} == {'allocations...ft': 1}], ...}
 E         
 E         Omitting 3 identical items, use -vv to show
 E         Differing items:
-E         {'allocations': []} != {'allocations': [{'doses': 5, 'production_shift': 0, 'use_shift': 0}, {'doses': 5, 'production_shift': 2, 'use_shift': 2}]}
-E         {'run_counts': [0, 0, 0]} != {'run_counts': [1, 0, 1]}
-E         {'total_produced_doses': 0} != {'total_produced_doses': 10}
-E         {'total_runs': 0} != {'total_runs': 2}
-E         {'production': []} != {'production': [{'produced_doses': 5, 'production_shift': 0, 'runs': 1, 'used_doses': 5, ...}, {'produced_doses': 0, '...': 1, 'runs': 0, 'used_doses': 0, ...}, {'produced_doses': 5, 'production_shift': 2, 'runs': 1, 'used_doses': 5, ...}]}
-E         Use -v to get more diff
+E         {'total_produced_doses': 0} != {'total_produced_doses': 8}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'produ...tion_shift': 1, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 4, 'production_shift': 1, 'runs': 1, 'sku': 'B', ...}]}
+E         {'run_counts': [0, 0]} != {'run_counts': [{'A': 1, 'B': 0, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}]}
+E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_sh...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:261: AssertionError
-______________________ test_c1_infeasible_returns_failure ______________________
+/tests/test_outputs.py:337: AssertionError
+______________________ test_c1_infeasible_shared_capacity ______________________
 
-    def test_c1_infeasible_returns_failure():
-        """Reject a demand that cannot fit inside the available shelf window."""
+    def test_c1_infeasible_shared_capacity():
+        """Reject a demand that exceeds the shared shelf window."""
         instance = make_instance(
-            [15, 0],
+            [(20, 0), (0, 0)],
             [1, 0],
-            batch_size=5,
+            batch_size=4,
             shelf_life=1,
             run_cost=10,
             waste_cost=1,
+            changeover_cost=3,
         )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -159,301 +164,178 @@ ______________________ test_c1_infeasible_returns_failure ______________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpi07t11n8/instance.json', '/tmp/tmpi07t11n8/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpx5dwfn_b/instance.json', '/tmp/tmpx5dwfn_b/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:295: AssertionError
+/tests/test_outputs.py:375: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-knkit0zz'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-cwrdd4rk'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-igqr5by9'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-x048knqo'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-FAILED ../tests/test_outputs.py::test_c1_single_shift_batch - AssertionError:...
-FAILED ../tests/test_outputs.py::test_c1_shelf_life_and_capacity - AssertionE...
-FAILED ../tests/test_outputs.py::test_c1_prepare_early_vs_late - AssertionErr...
-FAILED ../tests/test_outputs.py::test_c1_lexicographic_tie - AssertionError: ...
-FAILED ../tests/test_outputs.py::test_c1_infeasible_returns_failure - Asserti...
-5 failed, 11 deselected, 2 warnings in 0.41s
+FAILED ../tests/test_outputs.py::test_c1_single_shift_two_products - Assertio...
+FAILED ../tests/test_outputs.py::test_c1_shared_capacity_and_shelf - Assertio...
+FAILED ../tests/test_outputs.py::test_c1_changeover_tradeoff - AssertionError...
+FAILED ../tests/test_outputs.py::test_c1_lexicographic_pair_tie - AssertionEr...
+FAILED ../tests/test_outputs.py::test_c1_infeasible_shared_capacity - Asserti...
+5 failed, 11 deselected, 2 warnings in 0.43s
 
 [c2]
 FFFF                                                                     [100%]
 =================================== FAILURES ===================================
-___________________________ test_c2_fifo_allocations ___________________________
+________________________ test_c2_product_specific_fifo _________________________
 
-    def test_c2_fifo_allocations():
-        """Use the oldest still-valid batch before a batch prepared later."""
+    def test_c2_product_specific_fifo():
+        """Keep A and B inventories separate while consuming oldest first."""
         instance = make_instance(
-            [4, 0, 4],
-            [1, 1, 1],
-            batch_size=5,
+            [(3, 0), (0, 4), (5, 2)],
+            [2, 2, 2],
+            batch_size=4,
             shelf_life=3,
-            run_cost=100,
+            run_cost=20,
             waste_cost=1,
+            changeover_cost=4,
         )
         actual = output("run", instance)
         assert actual is not None
 >       assert actual == reference_plan(instance, actual["run_counts"])
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:311: 
+/tests/test_outputs.py:392: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-instance = {'batch_size': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 100, 'shelf_life_shifts': 3, ...}
+instance = {'batch_size': 4, 'changeover_cost_cents': 4, 'instance_id': 'test-pharmacy', 'run_cost_cents': 20, ...}
 run_counts = [0, 0, 0]
 
     def reference_plan(instance, run_counts):
-        """Expand supplied run counts with FIFO ages and exact integer accounting."""
+        """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
         shifts = instance["shifts"]
-        inventory = []
-        used = [0] * len(shifts)
-        wasted = [0] * len(shifts)
-        allocations = []
-    
-        for shift in shifts:
-            index = shift["index"]
-            runs = run_counts[index]
-            if not 0 <= runs <= shift["capacity"]:
-                raise ValueError("capacity")
-            if runs:
-                inventory.append(
-                    [index, index + shelf_life - 1, runs * batch_size]
-                )
-            inventory.sort(key=lambda row: (row[1], row[0]))
-            unmet = shift["demand"]
-            for row in inventory:
-                if unmet == 0:
-                    break
-                doses = min(row[2], unmet)
-                if doses:
-                    allocations.append(
-                        {
-                            "production_shift": row[0],
-                            "use_shift": index,
-                            "doses": doses,
-                        }
-                    )
-                    row[2] -= doses
-                    used[row[0]] += doses
-                    unmet -= doses
-            if unmet:
->               raise ValueError("uncovered")
-E               ValueError: uncovered
+        normalized = []
+        for index, row in enumerate(run_counts):
+>           if row["shift"] != index:
+               ^^^^^^^^^^^^
+E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:78: ValueError
-________________________ test_c2_expired_doses_counted _________________________
+/tests/test_outputs.py:55: TypeError
+________________________ test_c2_changeover_accounting _________________________
 
-    def test_c2_expired_doses_counted():
-        """Charge unused doses to the expiry shift instead of carrying them forever."""
+    def test_c2_changeover_accounting():
+        """Charge one changeover for a shift that prepares both products."""
         instance = make_instance(
-            [1, 0, 0, 4],
-            [1, 1, 1, 1],
-            batch_size=5,
+            [(2, 2), (0, 0)],
+            [2, 1],
+            batch_size=4,
+            shelf_life=1,
+            run_cost=10,
+            waste_cost=0,
+            changeover_cost=7,
+        )
+        actual = output("run", instance)
+        assert actual is not None
+>       assert actual["run_counts"] == [
+            {"shift": 0, "A": 1, "B": 1},
+            {"shift": 1, "A": 0, "B": 0},
+        ]
+E       AssertionError: assert [0, 0] == [{'A': 1, 'B'..., 'shift': 1}]
+E         
+E         At index 0 diff: 0 != {'shift': 0, 'A': 1, 'B': 1}
+E         Use -v to get more diff
+
+/tests/test_outputs.py:408: AssertionError
+_______________________ test_c2_two_product_expiry_waste _______________________
+
+    def test_c2_two_product_expiry_waste():
+        """Put each product's unused doses into its own waste account."""
+        instance = make_instance(
+            [(1, 1), (0, 0), (0, 0)],
+            [2, 1, 1],
+            batch_size=4,
             shelf_life=2,
             run_cost=10,
             waste_cost=1,
+            changeover_cost=3,
         )
         actual = output("run", instance)
         assert actual is not None
 >       assert actual == reference_plan(instance, actual["run_counts"])
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:335: 
+/tests/test_outputs.py:429: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-instance = {'batch_size': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 10, 'shelf_life_shifts': 2, ...}
-run_counts = [0, 0, 0, 0]
-
-    def reference_plan(instance, run_counts):
-        """Expand supplied run counts with FIFO ages and exact integer accounting."""
-        batch_size = instance["batch_size"]
-        shelf_life = instance["shelf_life_shifts"]
-        shifts = instance["shifts"]
-        inventory = []
-        used = [0] * len(shifts)
-        wasted = [0] * len(shifts)
-        allocations = []
-    
-        for shift in shifts:
-            index = shift["index"]
-            runs = run_counts[index]
-            if not 0 <= runs <= shift["capacity"]:
-                raise ValueError("capacity")
-            if runs:
-                inventory.append(
-                    [index, index + shelf_life - 1, runs * batch_size]
-                )
-            inventory.sort(key=lambda row: (row[1], row[0]))
-            unmet = shift["demand"]
-            for row in inventory:
-                if unmet == 0:
-                    break
-                doses = min(row[2], unmet)
-                if doses:
-                    allocations.append(
-                        {
-                            "production_shift": row[0],
-                            "use_shift": index,
-                            "doses": doses,
-                        }
-                    )
-                    row[2] -= doses
-                    used[row[0]] += doses
-                    unmet -= doses
-            if unmet:
->               raise ValueError("uncovered")
-E               ValueError: uncovered
-
-/tests/test_outputs.py:78: ValueError
-________________________ test_c2_zero_demand_tail_waste ________________________
-
-    def test_c2_zero_demand_tail_waste():
-        """Leave a short-lived batch's final doses in the waste account."""
-        instance = make_instance(
-            [1, 0, 0],
-            [1, 1, 1],
-            batch_size=5,
-            shelf_life=2,
-            run_cost=10,
-            waste_cost=1,
-        )
-        actual = output("run", instance)
-        assert actual is not None
->       assert actual == reference_plan(instance, actual["run_counts"])
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-/tests/test_outputs.py:351: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-instance = {'batch_size': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 10, 'shelf_life_shifts': 2, ...}
+instance = {'batch_size': 4, 'changeover_cost_cents': 3, 'instance_id': 'test-pharmacy', 'run_cost_cents': 10, ...}
 run_counts = [0, 0, 0]
 
     def reference_plan(instance, run_counts):
-        """Expand supplied run counts with FIFO ages and exact integer accounting."""
+        """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
         shifts = instance["shifts"]
-        inventory = []
-        used = [0] * len(shifts)
-        wasted = [0] * len(shifts)
-        allocations = []
-    
-        for shift in shifts:
-            index = shift["index"]
-            runs = run_counts[index]
-            if not 0 <= runs <= shift["capacity"]:
-                raise ValueError("capacity")
-            if runs:
-                inventory.append(
-                    [index, index + shelf_life - 1, runs * batch_size]
-                )
-            inventory.sort(key=lambda row: (row[1], row[0]))
-            unmet = shift["demand"]
-            for row in inventory:
-                if unmet == 0:
-                    break
-                doses = min(row[2], unmet)
-                if doses:
-                    allocations.append(
-                        {
-                            "production_shift": row[0],
-                            "use_shift": index,
-                            "doses": doses,
-                        }
-                    )
-                    row[2] -= doses
-                    used[row[0]] += doses
-                    unmet -= doses
-            if unmet:
->               raise ValueError("uncovered")
-E               ValueError: uncovered
+        normalized = []
+        for index, row in enumerate(run_counts):
+>           if row["shift"] != index:
+               ^^^^^^^^^^^^
+E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:78: ValueError
+/tests/test_outputs.py:55: TypeError
 ______________________ test_c2_plan_accounting_consistent ______________________
 
     def test_c2_plan_accounting_consistent():
-        """Keep produced, used, wasted, allocation, and total fields conserved."""
+        """Keep per-SKU production, allocation, waste, and totals conserved."""
         instance = make_instance(
-            [3, 2, 0, 4],
-            [1, 2, 1, 1],
-            batch_size=5,
+            [(3, 2), (1, 4), (0, 2), (4, 1)],
+            [2, 2, 1, 2],
+            batch_size=4,
             shelf_life=3,
             run_cost=17,
             waste_cost=2,
+            changeover_cost=5,
         )
         actual = output("run", instance)
         assert actual is not None
->       expected = reference_plan(instance, actual["run_counts"])
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>       assert actual == reference_plan(instance, actual["run_counts"])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:368: 
+/tests/test_outputs.py:447: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-instance = {'batch_size': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 17, 'shelf_life_shifts': 3, ...}
+instance = {'batch_size': 4, 'changeover_cost_cents': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 17, ...}
 run_counts = [0, 0, 0, 0]
 
     def reference_plan(instance, run_counts):
-        """Expand supplied run counts with FIFO ages and exact integer accounting."""
+        """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
         shifts = instance["shifts"]
-        inventory = []
-        used = [0] * len(shifts)
-        wasted = [0] * len(shifts)
-        allocations = []
-    
-        for shift in shifts:
-            index = shift["index"]
-            runs = run_counts[index]
-            if not 0 <= runs <= shift["capacity"]:
-                raise ValueError("capacity")
-            if runs:
-                inventory.append(
-                    [index, index + shelf_life - 1, runs * batch_size]
-                )
-            inventory.sort(key=lambda row: (row[1], row[0]))
-            unmet = shift["demand"]
-            for row in inventory:
-                if unmet == 0:
-                    break
-                doses = min(row[2], unmet)
-                if doses:
-                    allocations.append(
-                        {
-                            "production_shift": row[0],
-                            "use_shift": index,
-                            "doses": doses,
-                        }
-                    )
-                    row[2] -= doses
-                    used[row[0]] += doses
-                    unmet -= doses
-            if unmet:
->               raise ValueError("uncovered")
-E               ValueError: uncovered
+        normalized = []
+        for index, row in enumerate(run_counts):
+>           if row["shift"] != index:
+               ^^^^^^^^^^^^
+E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:78: ValueError
+/tests/test_outputs.py:55: TypeError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-lcpwltp2'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xlkzos9z'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xzk9meay'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-isd121_c'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-FAILED ../tests/test_outputs.py::test_c2_fifo_allocations - ValueError: uncov...
-FAILED ../tests/test_outputs.py::test_c2_expired_doses_counted - ValueError: ...
-FAILED ../tests/test_outputs.py::test_c2_zero_demand_tail_waste - ValueError:...
-FAILED ../tests/test_outputs.py::test_c2_plan_accounting_consistent - ValueEr...
+FAILED ../tests/test_outputs.py::test_c2_product_specific_fifo - TypeError: '...
+FAILED ../tests/test_outputs.py::test_c2_changeover_accounting - AssertionErr...
+FAILED ../tests/test_outputs.py::test_c2_two_product_expiry_waste - TypeError...
+FAILED ../tests/test_outputs.py::test_c2_plan_accounting_consistent - TypeErr...
 4 failed, 12 deselected, 2 warnings in 0.35s
 
 [c3]
@@ -462,14 +344,15 @@ FFFFF                                                                    [100%]
 _________________________ test_c3_accepts_optimal_plan _________________________
 
     def test_c3_accepts_optimal_plan():
-        """Audit a canonical plan built independently from the instance."""
+        """Audit a canonical two-product plan assembled independently."""
         instance = make_instance(
-            [2, 2, 1, 3],
-            [1, 1, 1, 1],
-            batch_size=5,
+            [(2, 1), (3, 2), (1, 3)],
+            [2, 2, 2],
+            batch_size=4,
             shelf_life=2,
             run_cost=23,
             waste_cost=4,
+            changeover_cost=8,
         )
         expected = brute_force_plan(instance)
         actual = output("audit", instance, expected)
@@ -480,73 +363,76 @@ _________________________ test_c3_accepts_optimal_plan _________________________
             "minimum_cost_cents": expected["total_cost_cents"],
             "reason": "",
         }
-E       AssertionError: assert None == {'actual_cost_cents': 54, 'instance_id': 'test-pharmacy', 'minimum_cost_cents': 54, 'reason': '', ...}
+E       AssertionError: assert None == {'actual_cost_cents': 116, 'instance_id': 'test-pharmacy', 'minimum_cost_cents': 116, 'reason': '', ...}
 
-/tests/test_outputs.py:390: AssertionError
+/tests/test_outputs.py:469: AssertionError
 ________________________ test_c3_rejects_tampered_cost _________________________
 
     def test_c3_rejects_tampered_cost():
-        """Reject a plan whose self-reported total was changed."""
+        """Reject a plan with a changed self-reported cost."""
         instance = make_instance(
-            [1, 2, 1],
-            [1, 1, 1],
-            batch_size=5,
+            [(1, 2), (2, 1), (0, 2)],
+            [2, 2, 1],
+            batch_size=4,
             shelf_life=2,
             run_cost=20,
             waste_cost=3,
+            changeover_cost=6,
         )
         expected = brute_force_plan(instance)
-        tampered = dict(expected)
+        tampered = copy.deepcopy(expected)
         tampered["total_cost_cents"] += 1
         actual = output("audit", instance, tampered)
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:413: AssertionError
+/tests/test_outputs.py:493: AssertionError
 ______________________ test_c3_rejects_missing_production ______________________
 
     def test_c3_rejects_missing_production():
-        """Reject a plan with an incomplete production summary."""
+        """Reject a plan with an incomplete per-product production summary."""
         instance = make_instance(
-            [3, 0, 3],
-            [1, 1, 1],
-            batch_size=5,
+            [(3, 0), (0, 3), (2, 2)],
+            [1, 1, 2],
+            batch_size=4,
             shelf_life=3,
             run_cost=11,
             waste_cost=2,
+            changeover_cost=4,
         )
         expected = brute_force_plan(instance)
-        incomplete = dict(expected)
+        incomplete = copy.deepcopy(expected)
         incomplete["production"] = expected["production"][1:]
         actual = output("audit", instance, incomplete)
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:432: AssertionError
+/tests/test_outputs.py:513: AssertionError
 ____________________ test_c3_rejects_nonoptimal_run_counts _____________________
 
     def test_c3_rejects_nonoptimal_run_counts():
-        """Reject a feasible schedule that spends more than the exact optimum."""
+        """Reject a feasible two-product schedule that is not cheapest."""
         instance = make_instance(
-            [4, 0, 4],
-            [1, 1, 1],
-            batch_size=5,
-            shelf_life=3,
+            [(4, 0), (0, 4), (2, 2)],
+            [2, 2, 2],
+            batch_size=4,
+            shelf_life=5,
             run_cost=10,
             waste_cost=1,
+            changeover_cost=2,
         )
         candidate = second_best_plan(instance)
         actual = output("audit", instance, candidate)
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:448: AssertionError
+/tests/test_outputs.py:530: AssertionError
 __________________ test_c3_invalid_instance_preserves_output ___________________
 
     def test_c3_invalid_instance_preserves_output():
-        """Reject duplicate shift indexes without touching an existing file."""
-        instance = make_instance([1], [1])
-        instance["shifts"].append({"index": 0, "demand": 0, "capacity": 1})
+        """Reject a malformed demand object without replacing an existing file."""
+        instance = make_instance([(1, 1)], [1])
+        instance["shifts"][0]["demand"] = {"A": 1}
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             instance_path = root / "instance.json"
@@ -569,16 +455,16 @@ __________________ test_c3_invalid_instance_preserves_output ___________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmpedi_e4x8/instance.json', '/tmp/tmpedi_e4x8/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmpzu_t3h_g/instance.json', '/tmp/tmpzu_t3h_g/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:476: AssertionError
+/tests/test_outputs.py:558: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-evqrmzbj'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xxp32a5v'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-vrz4_179'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-c2f4qraa'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -588,7 +474,7 @@ FAILED ../tests/test_outputs.py::test_c3_rejects_tampered_cost - assert None ...
 FAILED ../tests/test_outputs.py::test_c3_rejects_missing_production - assert ...
 FAILED ../tests/test_outputs.py::test_c3_rejects_nonoptimal_run_counts - asse...
 FAILED ../tests/test_outputs.py::test_c3_invalid_instance_preserves_output - ...
-5 failed, 11 deselected, 2 warnings in 0.42s
+5 failed, 11 deselected, 2 warnings in 0.43s
 
 [e2e]
 FF                                                                       [100%]
@@ -596,54 +482,52 @@ FF                                                                       [100%]
 __________________________ test_e2e_example_instance ___________________________
 
     def test_e2e_example_instance():
-        """Match the bundled example against an independent enumeration."""
+        """Match the bundled two-product example against enumeration."""
         instance = json.loads((WORKSPACE / "example.json").read_text(encoding="utf-8"))
         expected = brute_force_plan(instance)
         actual = output("run", instance)
 >       assert actual == expected
-E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations... 1, ...], ...}
+E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations...5}, ...], ...}
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_cost_cents': 0} != {'total_cost_cents': 27695}
-E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'use_shift': 0}, {'doses': 1, 'production_shift': 0, 'use_shift':...t': 2}, {'doses': 1, 'production_shift': 2, 'use_shift': 2}, {'doses': 3, 'production_shift': 2, 'use_shift': 4}, ...]}
-E         {'total_produced_doses': 0} != {'total_produced_doses': 30}
-E         {'total_wasted_doses': 0} != {'total_wasted_doses': 1}...
+E         {'total_runs': 0} != {'total_runs': 10}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 8, 'production_shift': 2, 'runs': 2, 'sku': 'B', ...}, ...]}
+E         {'run_counts': [0, 0, 0, 0, 0, 0, ...]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 1, 'B': 1, 'shift': 1}, {'A': 0, 'B': 2, 'shift': 2}, {'A': 1, 'B': 0, 'shift': 3}, {'A': 1, 'B': 0, 'shift': 4}, {'A': 0...
 E         
-E         ...Full output truncated (4 lines hidden), use '-vv' to show
+E         ...Full output truncated (8 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:485: AssertionError
-____________________ test_e2e_generated_ten_shift_instance _____________________
+/tests/test_outputs.py:567: AssertionError
+___________________ test_e2e_generated_seven_shift_instance ____________________
 
-    def test_e2e_generated_ten_shift_instance():
-        """Handle a longer generated horizon without losing FIFO accounting."""
-        instance = generated_instance(20261023, 10)
+    def test_e2e_generated_seven_shift_instance():
+        """Handle a generated mixed-capacity horizon with changeovers."""
+        instance = generated_instance(20261023, 7)
         expected = brute_force_plan(instance)
         actual = output("run", instance)
 >       assert actual == expected
-E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations... 1, ...], ...}
+E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations...5}, ...], ...}
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_cost_cents': 0} != {'total_cost_cents': 36990}
-E         {'allocations': []} != {'allocations': [{'doses': 3, 'production_shift': 0, 'use_shift': 0}, {'doses': 2, 'production_shift': 0, 'use_shift':...t': 2}, {'doses': 1, 'production_shift': 2, 'use_shift': 2}, {'doses': 4, 'production_shift': 2, 'use_shift': 3}, ...]}
-E         {'total_produced_doses': 0} != {'total_produced_doses': 40}
-E         {'total_wasted_doses': 0} != {'total_wasted_doses': 2}...
+E         {'total_runs': 0} != {'total_runs': 9}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 2, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}, ...]}
+E         {'run_counts': [0, 0, 0, 0, 0, 0, ...]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}, {'A': 2, 'B': 0, 'shift': 2}, {'A': 0, 'B': 1, 'shift': 3}, {'A': 0, 'B': 1, 'shift': 4}, {'A': 0,...
 E         
-E         ...Full output truncated (4 lines hidden), use '-vv' to show
+E         ...Full output truncated (8 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:493: AssertionError
+/tests/test_outputs.py:575: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-3_aec4p5'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-3e6jypdf'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-shzt5kj3'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-75026j1u'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
 FAILED ../tests/test_outputs.py::test_e2e_example_instance - AssertionError: ...
-FAILED ../tests/test_outputs.py::test_e2e_generated_ten_shift_instance - Asse...
-2 failed, 14 deselected, 2 warnings in 0.20s
+FAILED ../tests/test_outputs.py::test_e2e_generated_seven_shift_instance - As...
+2 failed, 14 deselected, 2 warnings in 0.88s

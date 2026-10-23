@@ -15,7 +15,7 @@
     },
     {
       "challenge_id": "C2",
-      "reward": 0.6,
+      "reward": 0.3,
       "evidence": "solution/evidence/partial-c2.log"
     },
     {

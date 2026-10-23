@@ -11,9 +11,11 @@ INSTANCE_KEYS = {
     "shelf_life_shifts",
     "run_cost_cents",
     "waste_cost_cents",
+    "changeover_cost_cents",
     "shifts",
 }
 SHIFT_KEYS = {"index", "demand", "capacity"}
+DEMAND_KEYS = {"A", "B"}
 
 
 def _integer(value, label, minimum=0):
@@ -40,6 +42,10 @@ def validate_instance(instance):
     shelf_life = _integer(instance["shelf_life_shifts"], "shelf_life_shifts", 1)
     run_cost = _integer(instance["run_cost_cents"], "run_cost_cents")
     waste_cost = _integer(instance["waste_cost_cents"], "waste_cost_cents")
+    changeover_cost = _integer(
+        instance["changeover_cost_cents"],
+        "changeover_cost_cents",
+    )
     if batch_size > 12:
         raise PlanningError("batch_size must not exceed 12")
     if shelf_life > 6:
@@ -56,14 +62,32 @@ def validate_instance(instance):
         index = _integer(row["index"], f"shifts[{position}].index")
         if index != position:
             raise PlanningError("shift indexes must be contiguous and start at zero")
-        demand = _integer(row["demand"], f"shifts[{position}].demand")
+        demand = row["demand"]
+        if not isinstance(demand, dict) or set(demand) != DEMAND_KEYS:
+            raise PlanningError(
+                f"shifts[{position}].demand must contain exactly A and B"
+            )
+        demand_a = _integer(
+            demand["A"],
+            f"shifts[{position}].demand.A",
+        )
+        demand_b = _integer(
+            demand["B"],
+            f"shifts[{position}].demand.B",
+        )
         capacity = _integer(row["capacity"], f"shifts[{position}].capacity")
-        if demand > 60:
-            raise PlanningError(f"shifts[{position}].demand must not exceed 60")
+        if demand_a > 30 or demand_b > 30:
+            raise PlanningError(
+                f"shifts[{position}] demand per product must not exceed 30"
+            )
         if capacity > 3:
             raise PlanningError(f"shifts[{position}].capacity must not exceed 3")
         normalized.append(
-            {"index": index, "demand": demand, "capacity": capacity}
+            {
+                "index": index,
+                "demand": {"A": demand_a, "B": demand_b},
+                "capacity": capacity,
+            }
         )
 
     return {
@@ -72,5 +96,6 @@ def validate_instance(instance):
         "shelf_life_shifts": shelf_life,
         "run_cost_cents": run_cost,
         "waste_cost_cents": waste_cost,
+        "changeover_cost_cents": changeover_cost,
         "shifts": normalized,
     }

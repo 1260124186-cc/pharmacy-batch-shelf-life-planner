@@ -11,6 +11,7 @@ write_reward_zero() {
 trap 'write_reward_zero; exit 130' INT TERM HUP
 
 if ! python -m pip install --user --no-cache-dir --disable-pip-version-check \
+  --no-index --find-links /tests/wheels \
   --require-hashes --only-binary=:all: -r /tests/requirements.txt; then
   write_reward_zero
   exit 0

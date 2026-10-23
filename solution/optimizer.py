@@ -1,53 +1,75 @@
-"""Exact dynamic programming for capacity- and shelf-limited batch runs."""
+"""Exact dynamic programming for two-product, capacity-limited batch runs."""
 
 from .model import PlanningError, validate_instance
 
 
 def optimize_runs(instance):
-    """Return the minimum-cost run-count vector with lexicographic tie-breaking."""
+    """Return per-shift A/B run counts with lexicographic tie-breaking."""
     data = validate_instance(instance)
     batch_size = data["batch_size"]
     shelf_life = data["shelf_life_shifts"]
     run_cost = data["run_cost_cents"]
     waste_cost = data["waste_cost_cents"]
+    changeover_cost = data["changeover_cost_cents"]
     shifts = data["shifts"]
 
     # State entries are doses by remaining usable shifts. Zero means the doses
     # expire at the end of the current shift.
-    states = {(0,) * shelf_life: (0, ())}
+    empty = (0,) * shelf_life
+    states = {(empty, empty): (0, ())}
     for shift in shifts:
-        demand = shift["demand"]
+        demand_a = shift["demand"]["A"]
+        demand_b = shift["demand"]["B"]
         capacity = shift["capacity"]
         next_states = {}
-        for inventory, (cost, path) in states.items():
-            for runs in range(capacity + 1):
-                buckets = list(inventory)
-                buckets[-1] += runs * batch_size
-                unmet = demand
-                for offset in range(shelf_life):
-                    if unmet == 0:
-                        break
-                    used = min(buckets[offset], unmet)
-                    buckets[offset] -= used
-                    unmet -= used
-                if unmet:
-                    continue
-                expired = buckets[0]
-                next_cost = cost + runs * run_cost + expired * waste_cost
-                next_inventory = tuple(buckets[1:]) + (0,)
-                candidate = (next_cost, path + (runs,))
-                known = next_states.get(next_inventory)
-                if known is None or candidate < known:
-                    next_states[next_inventory] = candidate
+        for (inventory_a, inventory_b), (cost, path) in states.items():
+            for runs_a in range(capacity + 1):
+                for runs_b in range(capacity - runs_a + 1):
+                    buckets_a = list(inventory_a)
+                    buckets_b = list(inventory_b)
+                    buckets_a[-1] += runs_a * batch_size
+                    buckets_b[-1] += runs_b * batch_size
+
+                    unmet_a = demand_a
+                    unmet_b = demand_b
+                    for offset in range(shelf_life):
+                        if unmet_a:
+                            used = min(buckets_a[offset], unmet_a)
+                            buckets_a[offset] -= used
+                            unmet_a -= used
+                        if unmet_b:
+                            used = min(buckets_b[offset], unmet_b)
+                            buckets_b[offset] -= used
+                            unmet_b -= used
+                    if unmet_a or unmet_b:
+                        continue
+
+                    expired = buckets_a[0] + buckets_b[0]
+                    next_cost = cost + (runs_a + runs_b) * run_cost
+                    next_cost += expired * waste_cost
+                    if runs_a and runs_b:
+                        next_cost += changeover_cost
+                    next_state = (
+                        tuple(buckets_a[1:]) + (0,),
+                        tuple(buckets_b[1:]) + (0,),
+                    )
+                    candidate = (next_cost, path + ((runs_a, runs_b),))
+                    known = next_states.get(next_state)
+                    if known is None or candidate < known:
+                        next_states[next_state] = candidate
         if not next_states:
             raise PlanningError("demand cannot be covered within the shelf window")
         states = next_states
 
     best = None
-    for inventory, (cost, path) in states.items():
-        candidate = (cost + sum(inventory) * waste_cost, path)
+    for (inventory_a, inventory_b), (cost, path) in states.items():
+        leftover = sum(inventory_a) + sum(inventory_b)
+        candidate = (cost + leftover * waste_cost, path)
         if best is None or candidate < best:
             best = candidate
     if best is None:
         raise PlanningError("no feasible preparation plan exists")
-    return list(best[1])
+    return [
+        {"shift": index, "A": runs_a, "B": runs_b}
+        for index, (runs_a, runs_b) in enumerate(best[1])
+    ]

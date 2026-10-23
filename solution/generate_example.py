@@ -7,22 +7,24 @@ from pathlib import Path
 
 def main():
     """Write the deterministic demonstration instance beside the task package."""
-    generator = random.Random(20261022)
-    demands = [
-        max(0, generator.randint(0, 8) + (index % 3) - 1)
-        for index in range(9)
-    ]
-    capacities = [1 + (index % 2) for index in range(9)]
+    generator = random.Random(20261023)
+    demands = [(4, 4)]
+    demands.extend(
+        (generator.randint(0, 4), generator.randint(0, 4) + (index % 2))
+        for index in range(1, 7)
+    )
+    capacities = [2, 2, 2, 1, 2, 2, 2]
     instance = {
-        "instance_id": "pharmacy-lot-demo-20261022",
-        "batch_size": 5,
+        "instance_id": "pharmacy-two-product-demo-20261023",
+        "batch_size": 4,
         "shelf_life_shifts": 3,
-        "run_cost_cents": 4600,
-        "waste_cost_cents": 95,
+        "run_cost_cents": 3800,
+        "waste_cost_cents": 70,
+        "changeover_cost_cents": 900,
         "shifts": [
             {
                 "index": index,
-                "demand": demand,
+                "demand": {"A": demand[0], "B": demand[1]},
                 "capacity": capacity,
             }
             for index, (demand, capacity) in enumerate(
