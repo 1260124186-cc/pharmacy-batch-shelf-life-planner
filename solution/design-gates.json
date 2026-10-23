@@ -44,6 +44,13 @@
       "observable": "storage_capacity_doses 存在且为非负整数；plan 的每个非末班库存与末班剩余均不超过上限；越限方案失败或被审计拒绝",
       "expected_basis": "库存按班次结束、消耗和报废之后计算；任何状态只要总留存超过 storage_capacity_doses 就不可行",
       "test_ids": ["T17", "T18", "T19"]
+    },
+    {
+      "id": "R5",
+      "statement": "每个生产批次最多只能在两个不同班次被使用，第二次使用后的剩余药液立即报废",
+      "observable": "方案允许同一批次出现两个 use_shift，不会出现第三个；第二次使用后 production 的报废量包含剩余药液",
+      "expected_basis": "FIFO 消耗时记录每个批次已使用的不同班次数；第二次使用后未耗尽的余量计入当班报废，不能留存到后续班次",
+      "test_ids": ["T20", "T21", "T22"]
     }
   ],
   "tests": [
@@ -66,6 +73,9 @@
     ,{"id": "T17", "kind": "exception", "requirement_ids": ["R4"], "expected": "库存上限使单次配制后的剩余药液不可行时非零退出且不写输出"}
     ,{"id": "T18", "kind": "normal", "requirement_ids": ["R4"], "expected": "库存上限迫使把一种药液推迟到后续班次配制"}
     ,{"id": "T19", "kind": "exception", "requirement_ids": ["R4"], "expected": "库存守恒但超过冷库上限的方案审计判为无效"}
+    ,{"id": "T20", "kind": "normal", "requirement_ids": ["R5"], "expected": "同一批次可覆盖生产班次和另一个后续使用班次"}
+    ,{"id": "T21", "kind": "boundary", "requirement_ids": ["R5"], "expected": "同一批次不能进入第三个使用班次，必须追加配制"}
+    ,{"id": "T22", "kind": "boundary", "requirement_ids": ["R5"], "expected": "第二次使用后的批次余量立即计入报废和成本"}
   ],
   "challenges": [
     {
@@ -99,6 +109,14 @@
       "fix_action": "在每次消耗和报废后汇总两种库存，把超出 storage_capacity_doses 的状态剪掉，并在展开和审计时复验",
       "requirement_ids": ["R4"],
       "test_ids": ["T17", "T18", "T19"]
+    },
+    {
+      "id": "C5",
+      "description": "单批次最多两个不同使用班次的开瓶寿命约束",
+      "failure_mode": "只按保质期保存批次会允许同一批次在第三个班次继续使用，导致需求覆盖和报废成本错误",
+      "fix_action": "在状态中区分未使用和已使用一次的药液，第二次消耗后把该批余量立即结算为报废，并由展开器逐批核对",
+      "requirement_ids": ["R5"],
+      "test_ids": ["T20", "T21", "T22"]
     }
   ]
 }

@@ -27,6 +27,11 @@
       "challenge_id": "C4",
       "reward": 0.8,
       "evidence": "solution/evidence/partial-c4.log"
+    },
+    {
+      "challenge_id": "C5",
+      "reward": 0.8,
+      "evidence": "solution/evidence/partial-c5.log"
     }
   ],
   "bypasses": [

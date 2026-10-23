@@ -56,6 +56,7 @@ def expand_plan(instance, run_counts):
                         "sku": sku,
                         "expiry_shift": index + shelf_life - 1,
                         "doses": runs * batch_size,
+                        "uses": 0,
                     }
                 )
 
@@ -88,6 +89,13 @@ def expand_plan(instance, run_counts):
                     bucket["doses"] -= doses
                     used[(sku, bucket["production_shift"])] += doses
                     unmet -= doses
+                    if bucket["uses"] == 0:
+                        if bucket["doses"]:
+                            bucket["uses"] = 1
+                    elif bucket["doses"]:
+                        key = (sku, bucket["production_shift"])
+                        wasted[key] += bucket["doses"]
+                        bucket["doses"] = 0
             if unmet:
                 raise PlanningError("selected run counts leave demand uncovered")
 

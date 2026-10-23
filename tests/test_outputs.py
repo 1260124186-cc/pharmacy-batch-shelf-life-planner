@@ -75,7 +75,13 @@ def reference_plan(instance, run_counts):
         for sku, runs in (("A", runs_a), ("B", runs_b)):
             if runs:
                 inventory.append(
-                    [index, sku, index + shelf_life - 1, runs * batch_size]
+                    [
+                        index,
+                        sku,
+                        index + shelf_life - 1,
+                        runs * batch_size,
+                        0,
+                    ]
                 )
         inventory.sort(key=lambda row: (row[2], row[0], row[1]))
         for sku in ("A", "B"):
@@ -98,6 +104,12 @@ def reference_plan(instance, run_counts):
                     row[3] -= doses
                     used[(sku, row[0])] += doses
                     unmet -= doses
+                    if row[4] == 0:
+                        if row[3]:
+                            row[4] = 1
+                    elif row[3]:
+                        wasted[(sku, row[0])] += row[3]
+                        row[3] = 0
             if unmet:
                 raise ValueError("uncovered")
         remaining = []
@@ -686,6 +698,74 @@ def test_c4_storage_capacity_audit():
     actual = output("audit", instance, tampered)
     assert actual is not None
     assert actual["valid"] is False
+
+
+def test_c5_batch_can_cover_two_shifts():
+    """Allow one lot to serve its production shift and one later shift."""
+    instance = make_instance(
+        [(2, 0), (0, 0), (2, 0)],
+        [1, 0, 0],
+        batch_size=4,
+        shelf_life=3,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=0,
+        storage_capacity=1000,
+    )
+    expected = reference_plan(
+        instance,
+        [
+            {"shift": 0, "A": 1, "B": 0},
+            {"shift": 1, "A": 0, "B": 0},
+            {"shift": 2, "A": 0, "B": 0},
+        ],
+    )
+    actual = output("run", instance)
+    assert actual == expected
+    assert actual["total_cost_cents"] == 10
+
+
+def test_c5_third_use_requires_another_batch():
+    """Reject carrying one lot into a third distinct use shift."""
+    instance = make_instance(
+        [(2, 0), (0, 0), (1, 0), (1, 0)],
+        [1, 1, 1, 1],
+        batch_size=4,
+        shelf_life=4,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=0,
+        storage_capacity=1000,
+    )
+    expected = brute_force_plan(instance)
+    actual = output("run", instance)
+    assert actual == expected
+
+
+def test_c5_remainder_disposed_after_second_use():
+    """Dispose a lot's remainder after its second distinct use shift."""
+    instance = make_instance(
+        [(1, 0), (0, 0), (1, 0)],
+        [1, 0, 0],
+        batch_size=4,
+        shelf_life=4,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=0,
+        storage_capacity=1000,
+    )
+    actual = output("run", instance)
+    expected = reference_plan(
+        instance,
+        [
+            {"shift": 0, "A": 1, "B": 0},
+            {"shift": 1, "A": 0, "B": 0},
+            {"shift": 2, "A": 0, "B": 0},
+        ],
+    )
+    assert actual == expected
+    assert actual["production"][0]["wasted_doses"] == 2
+    assert actual["total_cost_cents"] == 12
 
 
 def test_e2e_example_instance():

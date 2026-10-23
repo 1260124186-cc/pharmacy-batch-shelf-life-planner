@@ -1,0 +1,156 @@
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-esdomux4/partial-c5/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-esdomux4/partial-c5/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
+Exit: 0
+Reward: 0.8
+stdout:
+Looking in links: /tests/wheels
+Processing /tests/wheels/pytest-8.4.1-py3-none-any.whl (from -r /tests/requirements.txt (line 1))
+Processing /tests/wheels/iniconfig-2.3.1-py3-none-any.whl (from -r /tests/requirements.txt (line 2))
+Processing /tests/wheels/packaging-26.3-py3-none-any.whl (from -r /tests/requirements.txt (line 3))
+Processing /tests/wheels/pluggy-1.7.0-py3-none-any.whl (from -r /tests/requirements.txt (line 4))
+Processing /tests/wheels/pygments-2.21.0-py3-none-any.whl (from -r /tests/requirements.txt (line 5))
+Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.1
+
+stderr:
+  WARNING: The script pygmentize is installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts py.test and pytest are installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+[c1]
+.....                                                                    [100%]
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-emnu2rf6'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+5 passed, 17 deselected, 1 warning in 0.46s
+
+[c2]
+....                                                                     [100%]
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-rm2yqc_4'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+4 passed, 18 deselected, 1 warning in 0.38s
+
+[c3]
+.....                                                                    [100%]
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-e5w865_k'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+5 passed, 17 deselected, 1 warning in 0.44s
+
+[c4]
+...                                                                      [100%]
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-0ttrl872'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+3 passed, 19 deselected, 1 warning in 0.26s
+
+[c5]
+.F.                                                                      [100%]
+=================================== FAILURES ===================================
+___________________ test_c5_third_use_requires_another_batch ___________________
+
+    def test_c5_third_use_requires_another_batch():
+        """Reject carrying one lot into a third distinct use shift."""
+        instance = make_instance(
+            [(2, 0), (0, 0), (1, 0), (1, 0)],
+            [1, 1, 1, 1],
+            batch_size=4,
+            shelf_life=4,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=0,
+            storage_capacity=1000,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {'allocations...ft': 3}], ...} == {'allocations...ft': 3}], ...}
+E         
+E         Omitting 7 identical items, use -vv to show
+E         Differing items:
+E         {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}, ...]} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}, ...]}
+E         {'allocations': [{'doses': 2, 'pr...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:742: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-npgyf7tb'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-5myi4dny'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c5_third_use_requires_another_batch - A...
+1 failed, 2 passed, 19 deselected, 2 warnings in 0.27s
+
+[e2e]
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________________________ test_e2e_example_instance ___________________________
+
+    def test_e2e_example_instance():
+        """Match the bundled two-product example against enumeration."""
+        instance = json.loads((WORKSPACE / "example.json").read_text(encoding="utf-8"))
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {'allocations...5}, ...], ...} == {'allocations...5}, ...], ...}
+E         
+E         Omitting 7 identical items, use -vv to show
+E         Differing items:
+E         {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 4, 'production_shift': 0, ...oduction_shift': 1, 'sku': 'A', 'use_shift': 3}, {'doses': 3, 'production_shift': 1, 'sku': 'B', 'use_shift': 1}, ...]} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 4, 'production_shift': 0, ...oduction_shift': 1, 'sku': 'B', 'use_shift': 1}, {'doses': 1, 'production_shift': 1, 'sku': 'B', 'use_shift': 2}, ...]}
+E         {'production': [{'produced_doses'...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:776: AssertionError
+___________________ test_e2e_generated_seven_shift_instance ____________________
+
+    def test_e2e_generated_seven_shift_instance():
+        """Handle a generated mixed-capacity horizon with changeovers."""
+        instance = generated_instance(20261023, 7)
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {'allocations...5}, ...], ...} == {'allocations...5}, ...], ...}
+E         
+E         Omitting 7 identical items, use -vv to show
+E         Differing items:
+E         {'allocations': [{'doses': 2, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 1, 'production_shift': 0, ...oduction_shift': 0, 'sku': 'B', 'use_shift': 1}, {'doses': 3, 'production_shift': 1, 'sku': 'B', 'use_shift': 1}, ...]} != {'allocations': [{'doses': 2, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 1, 'production_shift': 0, ...oduction_shift': 1, 'sku': 'B', 'use_shift': 1}, {'doses': 1, 'production_shift': 1, 'sku': 'B', 'use_shift': 2}, ...]}
+E         {'production': [{'produced_doses'...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:784: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-nx6qldao'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-p6qvk5qj'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_e2e_example_instance - AssertionError: ...
+FAILED ../tests/test_outputs.py::test_e2e_generated_seven_shift_instance - As...
+2 failed, 20 deselected, 2 warnings in 0.92s

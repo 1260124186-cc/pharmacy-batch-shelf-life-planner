@@ -1,4 +1,4 @@
-Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-_p_dtwvn/bypass-empty/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-_p_dtwvn/bypass-empty/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-esdomux4/bypass-empty/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-esdomux4/bypass-empty/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
 Exit: 0
 Reward: 0.0
 stdout:
@@ -46,7 +46,7 @@ E                          {'doses': 3,...
 E         
 E         ...Full output truncated (23 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:296: AssertionError
+/tests/test_outputs.py:308: AssertionError
 ______________________ test_c1_shared_capacity_and_shelf _______________________
 
     def test_c1_shared_capacity_and_shelf():
@@ -72,7 +72,7 @@ E                          {'doses': 4,...
 E         
 E         ...Full output truncated (82 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:310: AssertionError
+/tests/test_outputs.py:322: AssertionError
 _________________________ test_c1_changeover_tradeoff __________________________
 
     def test_c1_changeover_tradeoff():
@@ -100,7 +100,7 @@ E                          {'doses': 2,...
 E         
 E         ...Full output truncated (57 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:326: AssertionError
+/tests/test_outputs.py:338: AssertionError
 ________________________ test_c1_lexicographic_pair_tie ________________________
 
     def test_c1_lexicographic_pair_tie():
@@ -128,7 +128,7 @@ E                          {'doses': 4,...
 E         
 E         ...Full output truncated (35 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:342: AssertionError
+/tests/test_outputs.py:354: AssertionError
 ______________________ test_c1_infeasible_shared_capacity ______________________
 
     def test_c1_infeasible_shared_capacity():
@@ -164,16 +164,16 @@ ______________________ test_c1_infeasible_shared_capacity ______________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpmuqvu6gv/instance.json', '/tmp/tmpmuqvu6gv/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpzy0p7zyx/instance.json', '/tmp/tmpzy0p7zyx/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:380: AssertionError
+/tests/test_outputs.py:392: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-d2qm0fjf'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-6xh24971'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-p0i_qd6q'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-qnsb564z'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -183,7 +183,7 @@ FAILED ../tests/test_outputs.py::test_c1_shared_capacity_and_shelf - Assertio...
 FAILED ../tests/test_outputs.py::test_c1_changeover_tradeoff - AssertionError...
 FAILED ../tests/test_outputs.py::test_c1_lexicographic_pair_tie - AssertionEr...
 FAILED ../tests/test_outputs.py::test_c1_infeasible_shared_capacity - Asserti...
-5 failed, 14 deselected, 2 warnings in 0.84s
+5 failed, 17 deselected, 2 warnings in 0.52s
 
 [c2]
 FFFF                                                                     [100%]
@@ -207,7 +207,7 @@ ________________________ test_c2_product_specific_fifo _________________________
                                                   ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'run_counts'
 
-/tests/test_outputs.py:397: KeyError
+/tests/test_outputs.py:409: KeyError
 ________________________ test_c2_changeover_accounting _________________________
 
     def test_c2_changeover_accounting():
@@ -230,7 +230,7 @@ ________________________ test_c2_changeover_accounting _________________________
         ]
 E       KeyError: 'run_counts'
 
-/tests/test_outputs.py:413: KeyError
+/tests/test_outputs.py:425: KeyError
 _______________________ test_c2_two_product_expiry_waste _______________________
 
     def test_c2_two_product_expiry_waste():
@@ -250,7 +250,7 @@ _______________________ test_c2_two_product_expiry_waste _______________________
                                                   ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'run_counts'
 
-/tests/test_outputs.py:434: KeyError
+/tests/test_outputs.py:446: KeyError
 ______________________ test_c2_plan_accounting_consistent ______________________
 
     def test_c2_plan_accounting_consistent():
@@ -270,14 +270,14 @@ ______________________ test_c2_plan_accounting_consistent ______________________
                                                   ^^^^^^^^^^^^^^^^^^^^
 E       KeyError: 'run_counts'
 
-/tests/test_outputs.py:452: KeyError
+/tests/test_outputs.py:464: KeyError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-wd2kz0an'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-qpq1ugt5'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-2wxy6dqu'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-ddu_t6bv'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -286,7 +286,7 @@ FAILED ../tests/test_outputs.py::test_c2_product_specific_fifo - KeyError: 'r...
 FAILED ../tests/test_outputs.py::test_c2_changeover_accounting - KeyError: 'r...
 FAILED ../tests/test_outputs.py::test_c2_two_product_expiry_waste - KeyError:...
 FAILED ../tests/test_outputs.py::test_c2_plan_accounting_consistent - KeyErro...
-4 failed, 15 deselected, 2 warnings in 0.73s
+4 failed, 18 deselected, 2 warnings in 0.42s
 
 [c3]
 FFFFF                                                                    [100%]
@@ -323,7 +323,7 @@ E          'reason': '',
 E          'valid': True}
 E         Use -v to get more diff
 
-/tests/test_outputs.py:474: AssertionError
+/tests/test_outputs.py:486: AssertionError
 ________________________ test_c3_rejects_tampered_cost _________________________
 
     def test_c3_rejects_tampered_cost():
@@ -346,7 +346,7 @@ ________________________ test_c3_rejects_tampered_cost _________________________
                ^^^^^^^^^^^^^^^
 E       KeyError: 'valid'
 
-/tests/test_outputs.py:499: KeyError
+/tests/test_outputs.py:511: KeyError
 ______________________ test_c3_rejects_missing_production ______________________
 
     def test_c3_rejects_missing_production():
@@ -369,7 +369,7 @@ ______________________ test_c3_rejects_missing_production ______________________
                ^^^^^^^^^^^^^^^
 E       KeyError: 'valid'
 
-/tests/test_outputs.py:519: KeyError
+/tests/test_outputs.py:531: KeyError
 ____________________ test_c3_rejects_nonoptimal_run_counts _____________________
 
     def test_c3_rejects_nonoptimal_run_counts():
@@ -390,7 +390,7 @@ ____________________ test_c3_rejects_nonoptimal_run_counts _____________________
                ^^^^^^^^^^^^^^^
 E       KeyError: 'valid'
 
-/tests/test_outputs.py:536: KeyError
+/tests/test_outputs.py:548: KeyError
 __________________ test_c3_invalid_instance_preserves_output ___________________
 
     def test_c3_invalid_instance_preserves_output():
@@ -419,16 +419,16 @@ __________________ test_c3_invalid_instance_preserves_output ___________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmpgyqjh3t7/instance.json', '/tmp/tmpgyqjh3t7/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmpfsyhy2ub/instance.json', '/tmp/tmpfsyhy2ub/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:563: AssertionError
+/tests/test_outputs.py:575: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-24afi64s'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-6e8h9ete'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-4hp_jvxm'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-8vo4zv0i'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -438,7 +438,7 @@ FAILED ../tests/test_outputs.py::test_c3_rejects_tampered_cost - KeyError: 'v...
 FAILED ../tests/test_outputs.py::test_c3_rejects_missing_production - KeyErro...
 FAILED ../tests/test_outputs.py::test_c3_rejects_nonoptimal_run_counts - KeyE...
 FAILED ../tests/test_outputs.py::test_c3_invalid_instance_preserves_output - ...
-5 failed, 14 deselected, 2 warnings in 0.87s
+5 failed, 17 deselected, 2 warnings in 0.55s
 
 [c4]
 FFF                                                                      [100%]
@@ -478,9 +478,9 @@ ______________ test_c4_storage_capacity_rejects_unavoidable_hold _______________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmptvz8oldk/instance.json', '/tmp/tmptvz8oldk/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpm6m2dufw/instance.json', '/tmp/tmpm6m2dufw/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:598: AssertionError
+/tests/test_outputs.py:610: AssertionError
 ____________________ test_c4_storage_capacity_changes_plan _____________________
 
     def test_c4_storage_capacity_changes_plan():
@@ -509,7 +509,7 @@ E                          {'doses': 3,...
 E         
 E         ...Full output truncated (39 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:616: AssertionError
+/tests/test_outputs.py:628: AssertionError
 ________________________ test_c4_storage_capacity_audit ________________________
 
     def test_c4_storage_capacity_audit():
@@ -584,14 +584,14 @@ ________________________ test_c4_storage_capacity_audit ________________________
                ^^^^^^^^^^^^^^^
 E       KeyError: 'valid'
 
-/tests/test_outputs.py:688: KeyError
+/tests/test_outputs.py:700: KeyError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-s0cnja_t'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-ffgn9npr'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-90nsv17c'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-9kpa3dsg'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -599,7 +599,127 @@ E       KeyError: 'valid'
 FAILED ../tests/test_outputs.py::test_c4_storage_capacity_rejects_unavoidable_hold
 FAILED ../tests/test_outputs.py::test_c4_storage_capacity_changes_plan - Asse...
 FAILED ../tests/test_outputs.py::test_c4_storage_capacity_audit - KeyError: '...
-3 failed, 16 deselected, 2 warnings in 0.31s
+3 failed, 19 deselected, 2 warnings in 0.34s
+
+[c5]
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________________ test_c5_batch_can_cover_two_shifts ______________________
+
+    def test_c5_batch_can_cover_two_shifts():
+        """Allow one lot to serve its production shift and one later shift."""
+        instance = make_instance(
+            [(2, 0), (0, 0), (2, 0)],
+            [1, 0, 0],
+            batch_size=4,
+            shelf_life=3,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=0,
+            storage_capacity=1000,
+        )
+        expected = reference_plan(
+            instance,
+            [
+                {"shift": 0, "A": 1, "B": 0},
+                {"shift": 1, "A": 0, "B": 0},
+                {"shift": 2, "A": 0, "B": 0},
+            ],
+        )
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {} == {'allocations...ft': 2}], ...}
+E         
+E         Right contains 9 more items:
+E         {'allocations': [{'doses': 2,
+E                           'production_shift': 0,
+E                           'sku': 'A',
+E                           'use_shift': 0},
+E                          {'doses': 2,...
+E         
+E         ...Full output truncated (49 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:724: AssertionError
+___________________ test_c5_third_use_requires_another_batch ___________________
+
+    def test_c5_third_use_requires_another_batch():
+        """Reject carrying one lot into a third distinct use shift."""
+        instance = make_instance(
+            [(2, 0), (0, 0), (1, 0), (1, 0)],
+            [1, 1, 1, 1],
+            batch_size=4,
+            shelf_life=4,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=0,
+            storage_capacity=1000,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {} == {'allocations...ft': 3}], ...}
+E         
+E         Right contains 9 more items:
+E         {'allocations': [{'doses': 2,
+E                           'production_shift': 0,
+E                           'sku': 'A',
+E                           'use_shift': 0},
+E                          {'doses': 1,...
+E         
+E         ...Full output truncated (66 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:742: AssertionError
+_________________ test_c5_remainder_disposed_after_second_use __________________
+
+    def test_c5_remainder_disposed_after_second_use():
+        """Dispose a lot's remainder after its second distinct use shift."""
+        instance = make_instance(
+            [(1, 0), (0, 0), (1, 0)],
+            [1, 0, 0],
+            batch_size=4,
+            shelf_life=4,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=0,
+            storage_capacity=1000,
+        )
+        actual = output("run", instance)
+        expected = reference_plan(
+            instance,
+            [
+                {"shift": 0, "A": 1, "B": 0},
+                {"shift": 1, "A": 0, "B": 0},
+                {"shift": 2, "A": 0, "B": 0},
+            ],
+        )
+>       assert actual == expected
+E       AssertionError: assert {} == {'allocations...ft': 2}], ...}
+E         
+E         Right contains 9 more items:
+E         {'allocations': [{'doses': 1,
+E                           'production_shift': 0,
+E                           'sku': 'A',
+E                           'use_shift': 0},
+E                          {'doses': 1,...
+E         
+E         ...Full output truncated (49 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:766: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-s1w_qoy7'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-caoyx2vp'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c5_batch_can_cover_two_shifts - Asserti...
+FAILED ../tests/test_outputs.py::test_c5_third_use_requires_another_batch - A...
+FAILED ../tests/test_outputs.py::test_c5_remainder_disposed_after_second_use
+3 failed, 19 deselected, 2 warnings in 0.36s
 
 [e2e]
 FF                                                                       [100%]
@@ -623,7 +743,7 @@ E                          {'doses': 4,...
 E         
 E         ...Full output truncated (153 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:696: AssertionError
+/tests/test_outputs.py:776: AssertionError
 ___________________ test_e2e_generated_seven_shift_instance ____________________
 
     def test_e2e_generated_seven_shift_instance():
@@ -641,20 +761,20 @@ E                           'sku': 'A',
 E                           'use_shift': 0},
 E                          {'doses': 1,...
 E         
-E         ...Full output truncated (157 lines hidden), use '-vv' to show
+E         ...Full output truncated (153 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:704: AssertionError
+/tests/test_outputs.py:784: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-31q4tdvs'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-lrsld51i'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-ua_lesgg'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-io6zj7sl'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
 FAILED ../tests/test_outputs.py::test_e2e_example_instance - AssertionError: ...
 FAILED ../tests/test_outputs.py::test_e2e_generated_seven_shift_instance - As...
-2 failed, 17 deselected, 2 warnings in 0.99s
+2 failed, 20 deselected, 2 warnings in 1.16s
