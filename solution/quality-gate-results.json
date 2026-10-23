@@ -10,18 +10,23 @@
   "partials": [
     {
       "challenge_id": "C1",
-      "reward": 0.8,
+      "reward": 0.6,
       "evidence": "solution/evidence/partial-c1.log"
     },
     {
       "challenge_id": "C2",
-      "reward": 0.3,
+      "reward": 0.2,
       "evidence": "solution/evidence/partial-c2.log"
     },
     {
       "challenge_id": "C3",
       "reward": 0.2,
       "evidence": "solution/evidence/partial-c3.log"
+    },
+    {
+      "challenge_id": "C4",
+      "reward": 0.8,
+      "evidence": "solution/evidence/partial-c4.log"
     }
   ],
   "bypasses": [

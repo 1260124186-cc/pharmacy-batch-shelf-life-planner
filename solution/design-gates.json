@@ -37,6 +37,13 @@
       "observable": "audit 对真正最优方案输出 valid=true，对篡改、遗漏、非最优或字段矛盾方案输出 valid=false，无效实例命令非零退出且输出保持不变",
       "expected_basis": "审计从实例独立求最优，并逐项重放 A/B 分配、生产汇总、报废、换线和成本，不采信方案自报合计",
       "test_ids": ["T10", "T11", "T12", "T13", "T14"]
+    },
+    {
+      "id": "R4",
+      "statement": "每个班次结束后的 A、B 合计留存药液不得超过 storage_capacity_doses，且该上限参与最优方案与审计",
+      "observable": "storage_capacity_doses 存在且为非负整数；plan 的每个非末班库存与末班剩余均不超过上限；越限方案失败或被审计拒绝",
+      "expected_basis": "库存按班次结束、消耗和报废之后计算；任何状态只要总留存超过 storage_capacity_doses 就不可行",
+      "test_ids": ["T17", "T18", "T19"]
     }
   ],
   "tests": [
@@ -56,6 +63,9 @@
     {"id": "T14", "kind": "exception", "requirement_ids": ["R3"], "expected": "无效需求对象不覆盖已有输出"},
     {"id": "T15", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "随题双品种演示实例全部字段与独立枚举一致"},
     {"id": "T16", "kind": "normal", "requirement_ids": ["R1", "R2"], "expected": "另一组七班次混合容量实例得到联合最优和完整分配"}
+    ,{"id": "T17", "kind": "exception", "requirement_ids": ["R4"], "expected": "库存上限使单次配制后的剩余药液不可行时非零退出且不写输出"}
+    ,{"id": "T18", "kind": "normal", "requirement_ids": ["R4"], "expected": "库存上限迫使把一种药液推迟到后续班次配制"}
+    ,{"id": "T19", "kind": "exception", "requirement_ids": ["R4"], "expected": "库存守恒但超过冷库上限的方案审计判为无效"}
   ],
   "challenges": [
     {
@@ -81,6 +91,14 @@
       "fix_action": "重算联合最低成本与规范 A/B 方案，逐项核对全部生产、分配、报废和换线字段，再通过临时文件原子替换输出",
       "requirement_ids": ["R3"],
       "test_ids": ["T10", "T11", "T12", "T13", "T14"]
+    },
+    {
+      "id": "C4",
+      "description": "班次结束时的双品种合计冷库容量约束",
+      "failure_mode": "只在报废时检查库存或把 A/B 上限分别计算，会接受超过合计留存量的配制方案",
+      "fix_action": "在每次消耗和报废后汇总两种库存，把超出 storage_capacity_doses 的状态剪掉，并在展开和审计时复验",
+      "requirement_ids": ["R4"],
+      "test_ids": ["T17", "T18", "T19"]
     }
   ]
 }

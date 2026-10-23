@@ -12,6 +12,7 @@ INSTANCE_KEYS = {
     "run_cost_cents",
     "waste_cost_cents",
     "changeover_cost_cents",
+    "storage_capacity_doses",
     "shifts",
 }
 SHIFT_KEYS = {"index", "demand", "capacity"}
@@ -45,6 +46,10 @@ def validate_instance(instance):
     changeover_cost = _integer(
         instance["changeover_cost_cents"],
         "changeover_cost_cents",
+    )
+    storage_capacity = _integer(
+        instance["storage_capacity_doses"],
+        "storage_capacity_doses",
     )
     if batch_size > 12:
         raise PlanningError("batch_size must not exceed 12")
@@ -97,5 +102,6 @@ def validate_instance(instance):
         "run_cost_cents": run_cost,
         "waste_cost_cents": waste_cost,
         "changeover_cost_cents": changeover_cost,
+        "storage_capacity_doses": storage_capacity,
         "shifts": normalized,
     }

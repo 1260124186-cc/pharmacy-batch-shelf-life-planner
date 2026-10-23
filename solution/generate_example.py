@@ -21,6 +21,7 @@ def main():
         "run_cost_cents": 3800,
         "waste_cost_cents": 70,
         "changeover_cost_cents": 900,
+        "storage_capacity_doses": 20,
         "shifts": [
             {
                 "index": index,

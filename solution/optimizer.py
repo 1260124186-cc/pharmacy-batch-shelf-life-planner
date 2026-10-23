@@ -11,6 +11,7 @@ def optimize_runs(instance):
     run_cost = data["run_cost_cents"]
     waste_cost = data["waste_cost_cents"]
     changeover_cost = data["changeover_cost_cents"]
+    storage_capacity = data["storage_capacity_doses"]
     shifts = data["shifts"]
 
     # State entries are doses by remaining usable shifts. Zero means the doses
@@ -53,6 +54,9 @@ def optimize_runs(instance):
                         tuple(buckets_a[1:]) + (0,),
                         tuple(buckets_b[1:]) + (0,),
                     )
+                    stored = sum(next_state[0]) + sum(next_state[1])
+                    if stored > storage_capacity:
+                        continue
                     candidate = (next_cost, path + ((runs_a, runs_b),))
                     known = next_states.get(next_state)
                     if known is None or candidate < known:

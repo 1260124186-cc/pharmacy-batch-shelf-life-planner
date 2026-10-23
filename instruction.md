@@ -21,6 +21,7 @@ python -m pharmacy_lots run instance.json result.json
 - `run_cost_cents`：每次配制的固定成本，非负整数分；
 - `waste_cost_cents`：报废一支药液的成本，非负整数分；
 - `changeover_cost_cents`：同一班次既配制 A 又配制 B 时的换线成本，非负整数分；
+- `storage_capacity_doses`：班次结束后 A、B 合计可留存的药液上限，非负整数；
 - `shifts`：1 到 12 个班次，按 `index` 从 0 连续排列，每项恰好含 `index`、`demand`、`capacity`。`demand` 必须恰好含 `A` 和 `B` 两个非负整数，每项不超过 30；`capacity` 是两种药液合计的配制次数上限，取 `0..3`。
 
 若实例字段、类型、班次编号或范围不合规，命令应以非零状态退出，且不得新建输出文件或覆盖已有输出。
@@ -30,6 +31,8 @@ python -m pharmacy_lots run instance.json result.json
 班次 `t` 为品种 A 配制 `a` 次、为品种 B 配制 `b` 次时，必须满足 `a + b <= capacity`，产出分别为 `a * batch_size` 和 `b * batch_size` 支。A、B 的批次各自从配制班次起可用 `shelf_life_shifts` 个班次，互不共用库存。
 
 每个班次每种品种的需求必须由该班可用批次精确覆盖，不能少发，不能跨品种替代，也不能跨过保质期继续使用。把每次配制的药液逐支分配；对同一品种和同一个使用班次，必须优先消耗失效班次最早的批次。未使用的药液在其失效班次计入报废，计划结束时仍未用完的批次也全部报废。
+
+每个班次完成消耗和报废之后，A、B 两个品种仍留存的药液合计不能超过 `storage_capacity_doses`。这个上限只约束班次结束时的库存，不把当班生产并当班用完的药液计入库存；若某个配额内方案在任一班次结束时超过上限，该方案不可行。
 
 总成本由三部分组成：
 

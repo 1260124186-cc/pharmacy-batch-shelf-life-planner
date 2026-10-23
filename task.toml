@@ -2,9 +2,9 @@ schema_version = "1.3"
 
 [task]
 name = "local/pharmacy-batch-shelf-life-planner"
-description = "在双品种高警示药液共用配制线时求保质期、产能和换线约束下的最低成本计划"
+description = "在双品种高警示药液共用配制线时求保质期、产能、换线和冷库容量约束下的最低成本计划"
 authors = [{ name = "Chengcheng Zhang" }]
-keywords = ["two-product lot sizing", "shelf life", "changeover cost", "FIFO allocation", "dynamic programming"]
+keywords = ["two-product lot sizing", "shelf life", "changeover cost", "storage capacity", "FIFO allocation"]
 
 [agent]
 timeout_sec = 3600
@@ -23,5 +23,5 @@ timeout_sec = 300
 [metadata]
 difficulty = "expert"
 category = "H.1 数学问题 (Mathematics)"
-tags = ["Python", "整数优化", "动态规划", "双品种", "换线成本", "FIFO"]
+tags = ["Python", "整数优化", "动态规划", "双品种", "换线成本", "库存上限", "FIFO"]
 expert_time_estimate = "4h"

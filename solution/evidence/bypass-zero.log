@@ -1,4 +1,4 @@
-Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-r2ct4ewg/bypass-zero/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-r2ct4ewg/bypass-zero/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-_p_dtwvn/bypass-zero/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/pharmacy-batch-shelf-life-planner/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/pharmacy-quality-_p_dtwvn/bypass-zero/logs:/logs harbor-quality:pharmacy-batch-shelf-life-planner bash /tests/test.sh
 Exit: 0
 Reward: 0.0
 stdout:
@@ -39,14 +39,14 @@ E       AssertionError: assert {'allocations...ts': [0], ...} == {'allocations..
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_produced_doses': 0} != {'total_produced_doses': 8}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 257}
-E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'B', ...}]}
-E         {'run_counts': [0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}]}...
+E         {'run_counts': [0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}]}
+E         {'total_runs': 0} != {'total_runs': 2}
+E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 3, 'production_shift': 0, 'sku': 'B', 'use_shift': 0}]}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 257}...
 E         
 E         ...Full output truncated (6 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:291: AssertionError
+/tests/test_outputs.py:296: AssertionError
 ______________________ test_c1_shared_capacity_and_shelf _______________________
 
     def test_c1_shared_capacity_and_shelf():
@@ -65,14 +65,14 @@ E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations..
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_produced_doses': 0} != {'total_produced_doses': 28}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 109}
-E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 8, 'production_shift': 2, 'runs': 2, 'sku': 'B', ...}, ...]}
-E         {'run_counts': [0, 0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 1, 'B': 0, 'shift': 1}, {'A': 0, 'B': 2, 'shift': 2}, {'A': 1, 'B': 1, 'shift': 3}]}...
+E         {'run_counts': [0, 0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 1, 'B': 0, 'shift': 1}, {'A': 0, 'B': 2, 'shift': 2}, {'A': 1, 'B': 1, 'shift': 3}]}
+E         {'total_runs': 0} != {'total_runs': 7}
+E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 1}, {'doses': 4, 'production_shift': 0, ...oduction_shift': 2, 'sku': 'B', 'use_shift': 3}, {'doses': 4, 'production_shift': 3, 'sku': 'A', 'use_shift': 3}, ...]}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 109}...
 E         
 E         ...Full output truncated (6 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:305: AssertionError
+/tests/test_outputs.py:310: AssertionError
 _________________________ test_c1_changeover_tradeoff __________________________
 
     def test_c1_changeover_tradeoff():
@@ -93,14 +93,14 @@ E       AssertionError: assert {'allocations...0, 0, 0], ...} == {'allocations..
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_produced_doses': 0} != {'total_produced_doses': 16}
-E         {'total_cost_cents': 0} != {'total_cost_cents': 156}
-E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...tion_shift': 2, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}]}
-E         {'run_counts': [0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}, {'A': 1, 'B': 0, 'shift': 2}]}...
+E         {'run_counts': [0, 0, 0]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}, {'A': 1, 'B': 0, 'shift': 2}]}
+E         {'total_runs': 0} != {'total_runs': 4}
+E         {'allocations': []} != {'allocations': [{'doses': 2, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 2, 'production_shift': 0, ..., 'production_shift': 1, 'sku': 'B', 'use_shift': 2}, {'doses': 2, 'production_shift': 2, 'sku': 'A', 'use_shift': 2}]}
+E         {'total_cost_cents': 0} != {'total_cost_cents': 156}...
 E         
 E         ...Full output truncated (6 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:321: AssertionError
+/tests/test_outputs.py:326: AssertionError
 ________________________ test_c1_lexicographic_pair_tie ________________________
 
     def test_c1_lexicographic_pair_tie():
@@ -121,14 +121,14 @@ E       AssertionError: assert {'allocations...: [0, 0], ...} == {'allocations..
 E         
 E         Omitting 3 identical items, use -vv to show
 E         Differing items:
-E         {'total_produced_doses': 0} != {'total_produced_doses': 8}
-E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'produ...tion_shift': 1, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 4, 'production_shift': 1, 'runs': 1, 'sku': 'B', ...}]}
 E         {'run_counts': [0, 0]} != {'run_counts': [{'A': 1, 'B': 0, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}]}
-E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_sh...
+E         {'total_runs': 0} != {'total_runs': 2}
+E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 4, 'production_shift': 1, 'sku': 'B', 'use_shift': 1}]}
+E         {'total_produced_doses': 0} != {'total_produced_doses': 8}...
 E         
-E         ...Full output truncated (5 lines hidden), use '-vv' to show
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:337: AssertionError
+/tests/test_outputs.py:342: AssertionError
 ______________________ test_c1_infeasible_shared_capacity ______________________
 
     def test_c1_infeasible_shared_capacity():
@@ -164,16 +164,16 @@ ______________________ test_c1_infeasible_shared_capacity ______________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpx5dwfn_b/instance.json', '/tmp/tmpx5dwfn_b/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpxa6yxos0/instance.json', '/tmp/tmpxa6yxos0/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:375: AssertionError
+/tests/test_outputs.py:380: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-cwrdd4rk'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-vx02pfov'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-x048knqo'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-1wcs4cwm'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -183,7 +183,7 @@ FAILED ../tests/test_outputs.py::test_c1_shared_capacity_and_shelf - Assertio...
 FAILED ../tests/test_outputs.py::test_c1_changeover_tradeoff - AssertionError...
 FAILED ../tests/test_outputs.py::test_c1_lexicographic_pair_tie - AssertionEr...
 FAILED ../tests/test_outputs.py::test_c1_infeasible_shared_capacity - Asserti...
-5 failed, 11 deselected, 2 warnings in 0.43s
+5 failed, 14 deselected, 2 warnings in 0.64s
 
 [c2]
 FFFF                                                                     [100%]
@@ -206,7 +206,7 @@ ________________________ test_c2_product_specific_fifo _________________________
 >       assert actual == reference_plan(instance, actual["run_counts"])
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:392: 
+/tests/test_outputs.py:397: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 instance = {'batch_size': 4, 'changeover_cost_cents': 4, 'instance_id': 'test-pharmacy', 'run_cost_cents': 20, ...}
@@ -216,6 +216,7 @@ run_counts = [0, 0, 0]
         """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
+        storage_capacity = instance["storage_capacity_doses"]
         shifts = instance["shifts"]
         normalized = []
         for index, row in enumerate(run_counts):
@@ -223,7 +224,7 @@ run_counts = [0, 0, 0]
                ^^^^^^^^^^^^
 E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:55: TypeError
+/tests/test_outputs.py:58: TypeError
 ________________________ test_c2_changeover_accounting _________________________
 
     def test_c2_changeover_accounting():
@@ -248,7 +249,7 @@ E
 E         At index 0 diff: 0 != {'shift': 0, 'A': 1, 'B': 1}
 E         Use -v to get more diff
 
-/tests/test_outputs.py:408: AssertionError
+/tests/test_outputs.py:413: AssertionError
 _______________________ test_c2_two_product_expiry_waste _______________________
 
     def test_c2_two_product_expiry_waste():
@@ -267,7 +268,7 @@ _______________________ test_c2_two_product_expiry_waste _______________________
 >       assert actual == reference_plan(instance, actual["run_counts"])
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:429: 
+/tests/test_outputs.py:434: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 instance = {'batch_size': 4, 'changeover_cost_cents': 3, 'instance_id': 'test-pharmacy', 'run_cost_cents': 10, ...}
@@ -277,6 +278,7 @@ run_counts = [0, 0, 0]
         """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
+        storage_capacity = instance["storage_capacity_doses"]
         shifts = instance["shifts"]
         normalized = []
         for index, row in enumerate(run_counts):
@@ -284,7 +286,7 @@ run_counts = [0, 0, 0]
                ^^^^^^^^^^^^
 E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:55: TypeError
+/tests/test_outputs.py:58: TypeError
 ______________________ test_c2_plan_accounting_consistent ______________________
 
     def test_c2_plan_accounting_consistent():
@@ -303,7 +305,7 @@ ______________________ test_c2_plan_accounting_consistent ______________________
 >       assert actual == reference_plan(instance, actual["run_counts"])
                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-/tests/test_outputs.py:447: 
+/tests/test_outputs.py:452: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
 instance = {'batch_size': 4, 'changeover_cost_cents': 5, 'instance_id': 'test-pharmacy', 'run_cost_cents': 17, ...}
@@ -313,6 +315,7 @@ run_counts = [0, 0, 0, 0]
         """Expand counts with separate product inventories and changeover costs."""
         batch_size = instance["batch_size"]
         shelf_life = instance["shelf_life_shifts"]
+        storage_capacity = instance["storage_capacity_doses"]
         shifts = instance["shifts"]
         normalized = []
         for index, row in enumerate(run_counts):
@@ -320,14 +323,14 @@ run_counts = [0, 0, 0, 0]
                ^^^^^^^^^^^^
 E           TypeError: 'int' object is not subscriptable
 
-/tests/test_outputs.py:55: TypeError
+/tests/test_outputs.py:58: TypeError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xlkzos9z'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-33ljk1lj'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-isd121_c'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-na1zsh5l'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -336,7 +339,7 @@ FAILED ../tests/test_outputs.py::test_c2_product_specific_fifo - TypeError: '...
 FAILED ../tests/test_outputs.py::test_c2_changeover_accounting - AssertionErr...
 FAILED ../tests/test_outputs.py::test_c2_two_product_expiry_waste - TypeError...
 FAILED ../tests/test_outputs.py::test_c2_plan_accounting_consistent - TypeErr...
-4 failed, 12 deselected, 2 warnings in 0.35s
+4 failed, 15 deselected, 2 warnings in 0.41s
 
 [c3]
 FFFFF                                                                    [100%]
@@ -365,7 +368,7 @@ _________________________ test_c3_accepts_optimal_plan _________________________
         }
 E       AssertionError: assert None == {'actual_cost_cents': 116, 'instance_id': 'test-pharmacy', 'minimum_cost_cents': 116, 'reason': '', ...}
 
-/tests/test_outputs.py:469: AssertionError
+/tests/test_outputs.py:474: AssertionError
 ________________________ test_c3_rejects_tampered_cost _________________________
 
     def test_c3_rejects_tampered_cost():
@@ -386,7 +389,7 @@ ________________________ test_c3_rejects_tampered_cost _________________________
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:493: AssertionError
+/tests/test_outputs.py:498: AssertionError
 ______________________ test_c3_rejects_missing_production ______________________
 
     def test_c3_rejects_missing_production():
@@ -407,7 +410,7 @@ ______________________ test_c3_rejects_missing_production ______________________
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:513: AssertionError
+/tests/test_outputs.py:518: AssertionError
 ____________________ test_c3_rejects_nonoptimal_run_counts _____________________
 
     def test_c3_rejects_nonoptimal_run_counts():
@@ -426,7 +429,7 @@ ____________________ test_c3_rejects_nonoptimal_run_counts _____________________
 >       assert actual is not None
 E       assert None is not None
 
-/tests/test_outputs.py:530: AssertionError
+/tests/test_outputs.py:535: AssertionError
 __________________ test_c3_invalid_instance_preserves_output ___________________
 
     def test_c3_invalid_instance_preserves_output():
@@ -455,16 +458,16 @@ __________________ test_c3_invalid_instance_preserves_output ___________________
             )
 >           assert completed.returncode != 0
 E           AssertionError: assert 0 != 0
-E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmpzu_t3h_g/instance.json', '/tmp/tmpzu_t3h_g/output.json'], returncode=0, stdout='', stderr='').returncode
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'run', '/tmp/tmp7sf_31a6/instance.json', '/tmp/tmp7sf_31a6/output.json'], returncode=0, stdout='', stderr='').returncode
 
-/tests/test_outputs.py:558: AssertionError
+/tests/test_outputs.py:563: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xxp32a5v'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-hzv4j_4k'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-c2f4qraa'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-aaoierog'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
@@ -474,7 +477,166 @@ FAILED ../tests/test_outputs.py::test_c3_rejects_tampered_cost - assert None ...
 FAILED ../tests/test_outputs.py::test_c3_rejects_missing_production - assert ...
 FAILED ../tests/test_outputs.py::test_c3_rejects_nonoptimal_run_counts - asse...
 FAILED ../tests/test_outputs.py::test_c3_invalid_instance_preserves_output - ...
-5 failed, 11 deselected, 2 warnings in 0.43s
+5 failed, 14 deselected, 2 warnings in 0.52s
+
+[c4]
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________ test_c4_storage_capacity_rejects_unavoidable_hold _______________
+
+    def test_c4_storage_capacity_rejects_unavoidable_hold():
+        """Reject one-shift stock that exceeds the shared cold-room limit."""
+        instance = make_instance(
+            [(1, 1)],
+            [2],
+            batch_size=4,
+            shelf_life=2,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=3,
+            storage_capacity=2,
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            instance_path = root / "instance.json"
+            output_path = root / "output.json"
+            instance_path.write_text(json.dumps(instance), encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pharmacy_lots",
+                    "plan",
+                    str(instance_path),
+                    str(output_path),
+                ],
+                cwd=WORKSPACE,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+>           assert completed.returncode != 0
+E           AssertionError: assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['/usr/local/bin/python', '-m', 'pharmacy_lots', 'plan', '/tmp/tmpdx89qnnp/instance.json', '/tmp/tmpdx89qnnp/output.json'], returncode=0, stdout='', stderr='').returncode
+
+/tests/test_outputs.py:598: AssertionError
+____________________ test_c4_storage_capacity_changes_plan _____________________
+
+    def test_c4_storage_capacity_changes_plan():
+        """Choose a staged schedule when early production would overfill storage."""
+        instance = make_instance(
+            [(1, 0), (3, 3)],
+            [2, 2],
+            batch_size=4,
+            shelf_life=3,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=1,
+            storage_capacity=4,
+        )
+        expected = brute_force_plan(instance)
+        actual = output("run", instance)
+>       assert actual == expected
+E       AssertionError: assert {'allocations...: [0, 0], ...} == {'allocations...ft': 1}], ...}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'run_counts': [0, 0]} != {'run_counts': [{'A': 1, 'B': 0, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}]}
+E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 0, 'produ...tion_shift': 1, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 4, 'production_shift': 1, 'runs': 1, 'sku': 'B', ...}]}
+E         {'total_runs': 0} != {'total_runs': 2}
+E         {'allocations': []} != {'allocations': [{'doses': 1, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': ...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+/tests/test_outputs.py:616: AssertionError
+________________________ test_c4_storage_capacity_audit ________________________
+
+    def test_c4_storage_capacity_audit():
+        """Reject a supplied plan whose retained doses exceed the stated limit."""
+        instance = make_instance(
+            [(1, 0), (3, 3)],
+            [2, 2],
+            batch_size=4,
+            shelf_life=3,
+            run_cost=10,
+            waste_cost=1,
+            changeover_cost=3,
+            storage_capacity=4,
+        )
+        tampered = {
+            "instance_id": instance["instance_id"],
+            "run_counts": [
+                {"shift": 0, "A": 1, "B": 1},
+                {"shift": 1, "A": 1, "B": 1},
+            ],
+            "production": [
+                {
+                    "production_shift": 0,
+                    "sku": "A",
+                    "runs": 1,
+                    "produced_doses": 4,
+                    "used_doses": 1,
+                    "wasted_doses": 0,
+                },
+                {
+                    "production_shift": 0,
+                    "sku": "B",
+                    "runs": 1,
+                    "produced_doses": 4,
+                    "used_doses": 1,
+                    "wasted_doses": 0,
+                },
+                {
+                    "production_shift": 1,
+                    "sku": "A",
+                    "runs": 1,
+                    "produced_doses": 4,
+                    "used_doses": 3,
+                    "wasted_doses": 1,
+                },
+                {
+                    "production_shift": 1,
+                    "sku": "B",
+                    "runs": 1,
+                    "produced_doses": 4,
+                    "used_doses": 3,
+                    "wasted_doses": 1,
+                },
+            ],
+            "allocations": [
+                {"production_shift": 0, "sku": "A", "use_shift": 0, "doses": 1},
+                {"production_shift": 0, "sku": "B", "use_shift": 0, "doses": 1},
+                {"production_shift": 0, "sku": "A", "use_shift": 1, "doses": 3},
+                {"production_shift": 0, "sku": "B", "use_shift": 1, "doses": 3},
+                {"production_shift": 1, "sku": "A", "use_shift": 1, "doses": 0},
+                {"production_shift": 1, "sku": "B", "use_shift": 1, "doses": 0},
+            ],
+            "total_runs": 4,
+            "total_produced_doses": 16,
+            "total_wasted_doses": 2,
+            "total_changeovers": 2,
+            "total_cost_cents": 48,
+        }
+        actual = output("audit", instance, tampered)
+>       assert actual is not None
+E       assert None is not None
+
+/tests/test_outputs.py:687: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-83l9b5dl'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-8ejmchwa'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c4_storage_capacity_rejects_unavoidable_hold
+FAILED ../tests/test_outputs.py::test_c4_storage_capacity_changes_plan - Asse...
+FAILED ../tests/test_outputs.py::test_c4_storage_capacity_audit - assert None...
+3 failed, 16 deselected, 2 warnings in 0.31s
 
 [e2e]
 FF                                                                       [100%]
@@ -491,13 +653,14 @@ E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations..
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_runs': 0} != {'total_runs': 10}
+E         {'total_produced_doses': 0} != {'total_produced_doses': 40}
 E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 0, 'sku': 'A', ...}, {'produced_doses': 8, 'production_shift': 2, 'runs': 2, 'sku': 'B', ...}, ...]}
-E         {'run_counts': [0, 0, 0, 0, 0, 0, ...]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 1, 'B': 1, 'shift': 1}, {'A': 0, 'B': 2, 'shift': 2}, {'A': 1, 'B': 0, 'shift': 3}, {'A': 1, 'B': 0, 'shift': 4}, {'A': 0...
+E         {'total_runs': 0} != {'total_runs': 10}
+E         {'allocations': []} != {'allocations': [{'doses': 4, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 4, 'production_shift': 0, ...oduction_shif...
 E         
-E         ...Full output truncated (8 lines hidden), use '-vv' to show
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:567: AssertionError
+/tests/test_outputs.py:696: AssertionError
 ___________________ test_e2e_generated_seven_shift_instance ____________________
 
     def test_e2e_generated_seven_shift_instance():
@@ -510,24 +673,25 @@ E       AssertionError: assert {'allocations... 0, ...], ...} == {'allocations..
 E         
 E         Omitting 1 identical items, use -vv to show
 E         Differing items:
-E         {'total_runs': 0} != {'total_runs': 9}
+E         {'total_produced_doses': 0} != {'total_produced_doses': 36}
 E         {'production': []} != {'production': [{'produced_doses': 4, 'production_shift': 0, 'runs': 1, 'sku': 'A', ...}, {'produced_doses': 4, 'produ...shift': 2, 'runs': 2, 'sku': 'A', ...}, {'produced_doses': 0, 'production_shift': 2, 'runs': 0, 'sku': 'B', ...}, ...]}
-E         {'run_counts': [0, 0, 0, 0, 0, 0, ...]} != {'run_counts': [{'A': 1, 'B': 1, 'shift': 0}, {'A': 0, 'B': 1, 'shift': 1}, {'A': 2, 'B': 0, 'shift': 2}, {'A': 0, 'B': 1, 'shift': 3}, {'A': 0, 'B': 1, 'shift': 4}, {'A': 0,...
+E         {'total_runs': 0} != {'total_runs': 9}
+E         {'allocations': []} != {'allocations': [{'doses': 2, 'production_shift': 0, 'sku': 'A', 'use_shift': 0}, {'doses': 1, 'production_shift': 0, ...oduction_shift...
 E         
-E         ...Full output truncated (8 lines hidden), use '-vv' to show
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
 
-/tests/test_outputs.py:575: AssertionError
+/tests/test_outputs.py:704: AssertionError
 =============================== warnings summary ===============================
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-3e6jypdf'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-28c0ykkk'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
 ../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
-  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-75026j1u'
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-xuae0dm4'
     config.cache.set("cache/lastfailed", self.lastfailed)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
 FAILED ../tests/test_outputs.py::test_e2e_example_instance - AssertionError: ...
 FAILED ../tests/test_outputs.py::test_e2e_generated_seven_shift_instance - As...
-2 failed, 14 deselected, 2 warnings in 0.88s
+2 failed, 17 deselected, 2 warnings in 1.04s

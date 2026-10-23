@@ -9,7 +9,7 @@ from pathlib import Path
 
 TASK = Path(__file__).resolve().parents[1]
 IMAGE = "harbor-quality:pharmacy-batch-shelf-life-planner"
-GROUPS = ("c1", "c2", "c3", "e2e")
+GROUPS = ("c1", "c2", "c3", "c4", "e2e")
 
 
 def run_command(arguments):
@@ -137,6 +137,34 @@ def drop_audit(work):
     (work / "pharmacy_lots" / "audit.py").unlink()
 
 
+def drop_storage_checks(work):
+    """Remove storage-capacity checks for the C4 partial experiment."""
+    module_dir = work / "pharmacy_lots"
+    optimizer = module_dir / "optimizer.py"
+    expander = module_dir / "expander.py"
+    optimizer.write_text(
+        optimizer.read_text(encoding="utf-8")
+        .replace('    storage_capacity = data["storage_capacity_doses"]\n', "")
+        .replace(
+            "                    stored = sum(next_state[0]) + sum(next_state[1])\n"
+            "                    if stored > storage_capacity:\n"
+            "                        continue\n",
+            "",
+        ),
+        encoding="utf-8",
+    )
+    expander.write_text(
+        expander.read_text(encoding="utf-8")
+        .replace('    storage_capacity = data["storage_capacity_doses"]\n', "")
+        .replace(
+            "        if sum(bucket[\"doses\"] for bucket in inventory) > storage_capacity:\n"
+            "            raise PlanningError(\"storage capacity is exceeded\")\n",
+            "",
+        ),
+        encoding="utf-8",
+    )
+
+
 def main():
     """Build the image, run all specimens, and write the gate matrix."""
     build = run_command(
@@ -177,6 +205,15 @@ def main():
                     root,
                     "partial-c3",
                     ["optimizer.py", "expander.py", "audit.py"],
+                ),
+            },
+            {
+                "challenge_id": "C4",
+                **specimen(
+                    root,
+                    "partial-c4",
+                    ["optimizer.py", "expander.py", "planner.py", "audit.py"],
+                    drop_storage_checks,
                 ),
             },
         ]

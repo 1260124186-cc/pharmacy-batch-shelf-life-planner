@@ -19,7 +19,7 @@ fi
 
 cd /workspace || exit 0
 score=0
-for spec in "c1 2" "c2 3" "c3 2" "e2e 3"; do
+for spec in "c1 2" "c2 2" "c3 2" "c4 2" "e2e 2"; do
   group=${spec%% *}
   weight=${spec##* }
   if python -m pytest -q /tests/test_outputs.py -k "test_${group}_" \

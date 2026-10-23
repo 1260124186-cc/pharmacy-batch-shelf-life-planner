@@ -11,6 +11,7 @@ def expand_plan(instance, run_counts):
     run_cost = data["run_cost_cents"]
     waste_cost = data["waste_cost_cents"]
     changeover_cost = data["changeover_cost_cents"]
+    storage_capacity = data["storage_capacity_doses"]
     shifts = data["shifts"]
     count = len(shifts)
 
@@ -98,6 +99,8 @@ def expand_plan(instance, run_counts):
             else:
                 remaining.append(bucket)
         inventory = remaining
+        if sum(bucket["doses"] for bucket in inventory) > storage_capacity:
+            raise PlanningError("storage capacity is exceeded")
 
     for bucket in inventory:
         key = (bucket["sku"], bucket["production_shift"])

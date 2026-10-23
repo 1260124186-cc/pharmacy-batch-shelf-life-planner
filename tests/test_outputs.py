@@ -23,6 +23,7 @@ def make_instance(
     run_cost=100,
     waste_cost=7,
     changeover_cost=30,
+    storage_capacity=1000,
 ):
     """Build an instance whose demand rows contain A and B doses."""
     return {
@@ -32,6 +33,7 @@ def make_instance(
         "run_cost_cents": run_cost,
         "waste_cost_cents": waste_cost,
         "changeover_cost_cents": changeover_cost,
+        "storage_capacity_doses": storage_capacity,
         "shifts": [
             {
                 "index": index,
@@ -49,6 +51,7 @@ def reference_plan(instance, run_counts):
     """Expand counts with separate product inventories and changeover costs."""
     batch_size = instance["batch_size"]
     shelf_life = instance["shelf_life_shifts"]
+    storage_capacity = instance["storage_capacity_doses"]
     shifts = instance["shifts"]
     normalized = []
     for index, row in enumerate(run_counts):
@@ -104,6 +107,8 @@ def reference_plan(instance, run_counts):
             else:
                 remaining.append(row)
         inventory = remaining
+        if sum(row[3] for row in inventory) > storage_capacity:
+            raise ValueError("storage")
 
     for row in inventory:
         wasted[(row[1], row[0])] += row[3]
@@ -557,6 +562,130 @@ def test_c3_invalid_instance_preserves_output():
         )
         assert completed.returncode != 0
         assert output_path.read_text(encoding="utf-8") == "existing"
+
+
+def test_c4_storage_capacity_rejects_unavoidable_hold():
+    """Reject one-shift stock that exceeds the shared cold-room limit."""
+    instance = make_instance(
+        [(1, 1)],
+        [2],
+        batch_size=4,
+        shelf_life=2,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=3,
+        storage_capacity=2,
+    )
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        instance_path = root / "instance.json"
+        output_path = root / "output.json"
+        instance_path.write_text(json.dumps(instance), encoding="utf-8")
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pharmacy_lots",
+                "plan",
+                str(instance_path),
+                str(output_path),
+            ],
+            cwd=WORKSPACE,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert completed.returncode != 0
+        assert not output_path.exists()
+
+
+def test_c4_storage_capacity_changes_plan():
+    """Choose a staged schedule when early production would overfill storage."""
+    instance = make_instance(
+        [(1, 0), (3, 3)],
+        [2, 2],
+        batch_size=4,
+        shelf_life=3,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=1,
+        storage_capacity=4,
+    )
+    expected = brute_force_plan(instance)
+    actual = output("run", instance)
+    assert actual == expected
+    assert expected["run_counts"][0] == {"shift": 0, "A": 1, "B": 0}
+
+
+def test_c4_storage_capacity_audit():
+    """Reject a supplied plan whose retained doses exceed the stated limit."""
+    instance = make_instance(
+        [(1, 0), (3, 3)],
+        [2, 2],
+        batch_size=4,
+        shelf_life=3,
+        run_cost=10,
+        waste_cost=1,
+        changeover_cost=3,
+        storage_capacity=4,
+    )
+    tampered = {
+        "instance_id": instance["instance_id"],
+        "run_counts": [
+            {"shift": 0, "A": 1, "B": 1},
+            {"shift": 1, "A": 1, "B": 1},
+        ],
+        "production": [
+            {
+                "production_shift": 0,
+                "sku": "A",
+                "runs": 1,
+                "produced_doses": 4,
+                "used_doses": 1,
+                "wasted_doses": 0,
+            },
+            {
+                "production_shift": 0,
+                "sku": "B",
+                "runs": 1,
+                "produced_doses": 4,
+                "used_doses": 1,
+                "wasted_doses": 0,
+            },
+            {
+                "production_shift": 1,
+                "sku": "A",
+                "runs": 1,
+                "produced_doses": 4,
+                "used_doses": 3,
+                "wasted_doses": 1,
+            },
+            {
+                "production_shift": 1,
+                "sku": "B",
+                "runs": 1,
+                "produced_doses": 4,
+                "used_doses": 3,
+                "wasted_doses": 1,
+            },
+        ],
+        "allocations": [
+            {"production_shift": 0, "sku": "A", "use_shift": 0, "doses": 1},
+            {"production_shift": 0, "sku": "B", "use_shift": 0, "doses": 1},
+            {"production_shift": 0, "sku": "A", "use_shift": 1, "doses": 3},
+            {"production_shift": 0, "sku": "B", "use_shift": 1, "doses": 3},
+            {"production_shift": 1, "sku": "A", "use_shift": 1, "doses": 0},
+            {"production_shift": 1, "sku": "B", "use_shift": 1, "doses": 0},
+        ],
+        "total_runs": 4,
+        "total_produced_doses": 16,
+        "total_wasted_doses": 2,
+        "total_changeovers": 2,
+        "total_cost_cents": 48,
+    }
+    actual = output("audit", instance, tampered)
+    assert actual is not None
+    assert actual["valid"] is False
 
 
 def test_e2e_example_instance():
